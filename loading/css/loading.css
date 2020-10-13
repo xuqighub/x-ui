@@ -1,0 +1,117 @@
+.xui-spin-layer {
+    display: none;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+.xui-show{
+    display: block !important;
+}
+.xui-spin-container {
+    display: none;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.xui-spin {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, .85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: "tnum";
+    position: absolute;
+    color: #1890ff;
+    text-align: center;
+    vertical-align: middle;
+    transition: transform .3s cubic-bezier(.78, .14, .15, .86);
+}
+
+.xui-spin-spinning {
+    position: static;
+    display: inline-block;
+    opacity: 1;
+}
+
+.xui-spin-dot-spin {
+    transform: rotate(45deg);
+    animation: xRotate 1.2s linear infinite;
+}
+
+.xui-spin-dot {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+    width: 1em;
+    height: 1em;
+}
+.xui-spin-sm .xui-spin-dot{
+    font-size:14px;
+}
+.xui-spin-lg .xui-spin-dot{
+    font-size:32px;
+}
+
+.xui-spin-dot-item {
+    position: absolute;
+    display: block;
+    width: 9px;
+    height: 9px;
+    background-color: #1890ff;
+    border-radius: 100%;
+    transform: scale(.75);
+    transform-origin: 50% 50%;
+    opacity: .3;
+    animation: xSpinMove 1s linear infinite alternate;
+}
+.xui-spin-sm .xui-spin-dot-item{
+    width:6px;
+    height:6px;
+}
+.xui-spin-lg .xui-spin-dot-item{
+    width:14px;
+    height:14px;
+}
+.xui-spin-dot-item:first-child {
+    top: 0;
+    left: 0;
+}
+
+.xui-spin-dot-item:nth-child(2) {
+    top: 0;
+    right: 0;
+    animation-delay: .4s;
+}
+
+.xui-spin-dot-item:nth-child(3) {
+    right: 0;
+    bottom: 0;
+    animation-delay: .8s;
+}
+
+.xui-spin-dot-item:nth-child(4) {
+    bottom: 0;
+    left: 0;
+    animation-delay: 1.2s;
+}
+
+@keyframes xRotate {
+    100% {
+        transform: rotate(405deg);
+    }
+}
+
+@keyframes xSpinMove {
+    to {
+        opacity: 1
+    }
+}

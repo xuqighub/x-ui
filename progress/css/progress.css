@@ -1,0 +1,42 @@
+.xui-progress {
+    width: 98%;
+    height: 14px;
+    overflow: hidden;
+    background-color: #e5e8ec;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+}
+
+.xui-progress-bar {
+    height: 100%;
+    width: var(--percent);
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    line-height: 14px;
+    background-color: #5cb85c;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    background-size: 40px 40px;
+    transition: width .6s ease;
+}
+.xui-progress-stripes>.xui-progress-bar {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+}
+
+.ui-progress-stripesMove>.xui-progress-bar {
+    animation: xui-progress-bar-stripes 2s linear infinite;
+}
+
+.xui-failed-status>.xui-progress-bar {
+    background-color: #d9534f;
+}
+
+@keyframes xui-progress-bar-stripes {
+    from {
+        background-position: 40px 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
+}

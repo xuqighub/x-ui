@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../pagenation/self-ui-icons/iconfont.css">
+    <link rel="stylesheet" href="../loading/css/loading.css" />
+    <link rel="stylesheet" href="../pagenation/css/pagenation.css">
+    <link rel="stylesheet" href="css/table.css">
+    <script src="../loading/js/loading.js"></script>
+    <script src="../pagenation/js/pagenation.js"></script>
+    <script src="js/ui-table.js"></script>
+    <style>
+        body {
+            padding: 30px;
+            padding-top: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        }
+
+        .box {
+            width: 100%;
+            border: 1px solid #c00;
+            position: relative;
+            width: 1000px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+
+    </div>
+
+    <button id="btn-update">update</button>
+    <button id="btn-update2">update2</button>
+    <button id="btn-update3">update3</button>
+    <button id="btn-check">get checked data</button>
+    <button id="btn-showloading">showloading</button>
+    <button id="btn-hideloading">hideloading</button>
+    <script>
+        const columns2 = [{
+                rowSelect: 'checkbox',
+                width: 60,
+            },
+            {
+                title: '名字',
+                dataIndex: 'name',
+                width: 120,
+                sort:true,
+            },
+            {
+                title: 'Age',
+                dataIndex: 'age',
+                width: 120,
+                sort:true,
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 120,
+                ellipsis: true,
+                render: function () {
+                    return '<span>London No. 2 Lake ParkLondon No. 2 Lake Park</span>'
+                }
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 120
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 180,
+
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                width: 180
+            }
+        ];
+        const columns = [
+            {
+                rowSelect: 'checkbox',
+                //当column里面不仅有rowSelect还有dataIndex时，表明数据中自带checkbox字段按数据的checked状态渲染
+                // dataIndex:'idstr',
+                width: 60,
+                //当有rowSelect字段还有render时，根据render返回的值来确定check状态,
+                //如果返回的是disabled，则该checkbox不可选中
+                render:function(res,item){
+                    if(item.idstr===35){
+                        return 'disabled';
+                    }
+                    return false;
+                },
+                // fixed:'left'
+            },
+            {
+                title: 'devicecode',
+                dataIndex: 'devicecode',
+                width: 190,
+                sort:true,
+            },
+            {
+                title: 'deviceloginname',
+                dataIndex: 'deviceloginname',
+                width: 120,
+                //可编辑数据单元格，有editEl则为 select（需要手动设置select结构） 否则为input
+                edit:{
+                    
+                    editEl:`<select>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>`,
+                    //第一个参数是编辑后的输入的值，第二个参数是一个回调函数，
+                    //调用回调函数往里面传入一个boolean值，true值保留输入的新值，否则变回之前的值
+                    callback:function(val,resCallback){
+                        setTimeout(_=>{
+                            resCallback(true);
+                        })
+                    }
+                }
+            },
+            {
+                title: 'deviceloginpass',
+                dataIndex: 'deviceloginpass',
+                width: 190,
+                ellipsis: true,
+                render: function () {
+                    return '<span>London No. 2 Lake ParkLondon No. 2 Lake Park</span>'
+                }
+            },
+            {
+                title: 'devicename',
+                dataIndex: 'devicename',
+                width: 140
+            },
+            {
+                title:'操作',
+                width:180,
+                render:function(value,obj){
+                    return '<button class="row-btn">click</button>'
+                }
+            },
+            {
+                title: 'deviceresourename',
+                dataIndex: 'deviceresourename',
+                width: 180
+            },
+            {
+                title: 'devicetype',
+                dataIndex: 'devicetype',
+                width: 180
+            },
+            {
+                title: 'idstr',
+                dataIndex: 'idstr',
+                width: 180,
+                sort:true,
+                edit:{
+                    
+                    editEl:`<select>
+                            <option value="1">1</option>
+                            <option value="40">2</option>
+                            <option value="3">3</option>
+                        </select>`,
+                    callback:function(val){
+                        return true;
+                    }
+                },
+            },
+            {
+                title: 'ipaddress',
+                dataIndex: 'ipaddress',
+                width: 180
+            },
+            {
+                title: 'createtime',
+                dataIndex: 'createtime',
+                width: 180,
+                // fixed:'right'
+            }
+        ];
+        const data = [];
+        for (let i = 0; i < 60; i++) {
+            data.push({
+                key: i,
+                name: `Edward King ${i}`,
+                age: Math.round(Math.random()*100),
+                address: `London, Park Lane no. ${i}`,
+            });
+        }
+        var tableObj = table.render({
+            mountEl: '.box',
+            columns: columns2,
+            dataSource: {
+                data:data,
+                url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
+                //初始传入的参数
+                para: {
+                    orgcode: 51000000000000000000,
+                    
+                },
+                parseData: function (res) {
+                    //将返回结果经过处理之后返回一个数据对象,例如{data:[...],code:'200',count:200}，
+                    //还可在这里对数据结果进行拦击，比如成功或失败的话就弹出失败提示
+                    return {
+                        data: res.data.list,
+                        count: res.dataCounts
+                    };
+                },
+                // sort:{
+                //     //排序需要的字段，如果需要变动，order的值为asc或desc
+                //     //sort为作为排序的字段
+                //     order:'order2',
+                //     sort:'sort2'
+                // }
+            },
+            //如果设定了x总宽度，table-layout将变为fixed,这时候如果某个column列没有设置宽度，那么它将分享表格剩余宽度,
+            //如果x总宽度大于每个column加起来总宽度，并且所有column都有width,那么剩余的宽度将会自动按（列宽）比例分配到每个column
+            //如果既没有x总宽度，又没有fixed属性，table-layout为 auto，这时将根据内容来确定表格列宽度，column的width将失效
+            //x,y可加单位也可不加，不加的时候默认单位为 px
+            scroll: {
+                y: 620,
+            },
+            //不传rowSelect就默认是checkbox
+            rowSelect: {
+                type: 'checkbox'
+            },
+            //table 表体部分数据没满的是否需要空行填满，好看一点
+            // fillRows:{
+            //     rowHeight:59
+            // },
+            pagination: {
+                layout: ['count', 'prev', 'page', 'next', 'limits','refresh'],
+                pageSize:10,
+                groups:3,
+                // para:{
+                //     pageSize:'pageLimit',
+                //     curPage:'current'
+                // }
+            },
+            loading:{
+                size:'middle'
+            },
+        });
+        //调用更新table数据，包括可以更新链接，就是之前传入dataSource中的值
+        document.getElementById('btn-update').onclick = function () {
+            tableObj.update({
+                //  data:data,
+                 url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
+                //初始传入的参数
+                para: {
+                    orgcode: 51000000000000000000,
+                    idstr:'40'
+                },
+                parseData: function (res) {
+                    //将返回结果经过处理之后返回一个数据对象,例如{data:[...],code:'200',count:200}，
+                    //还可在这里对数据结果进行拦击，比如成功或失败的话就弹出失败提示
+                    return {
+                        data: res.data.list,
+                        count: res.dataCounts
+                    };
+                }
+            });
+        }
+        document.getElementById('btn-update2').onclick = function () {
+            tableObj.update({
+                data:data
+            });
+        }
+        //更新获取的参数，如查询筛选某个字段
+        document.getElementById('btn-update3').onclick = function () {
+            tableObj.update({
+                //初始传入的参数
+                para: {
+                    orgcode: 51000000000000000000,
+                    idstr:'20',
+                    name:'lll'
+                }
+            });
+        }
+        //点击行事件，如果是某个button元素可以通过ev定位到触发的元素
+        tableObj.on('row-click',function(ev,dataObj){
+            if(ev.target.className === 'row-btn'){
+                console.log('dataObj',dataObj,ev.target)
+            }
+        })
+        //获取已经选中的data
+        document.querySelector('#btn-check').onclick = function(){
+            console.log(tableObj.getCheckedData());
+        }
+        //显示table中的loading
+        document.getElementById('btn-showloading').onclick=function(){
+            tableObj.showLoading();
+        }
+        //隐藏table中的loading
+        document.getElementById('btn-hideloading').onclick=function(){
+            tableObj.hideLoading();
+        }
+       
+    </script>
+</body>
+
+</html>

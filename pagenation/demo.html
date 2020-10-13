@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="self-ui-icons/iconfont.css" />
+    <link rel="stylesheet" href="css/pagenation.css" />
+    
+    <style>
+        body{
+            padding:200px;
+        }
+        #box{
+            width:100%;
+            height:200px;
+            border:1px solid #c00;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="box">
+
+    </div>
+    <button id='btn'>update</button>
+<script src="js/pagenation.js"></script>
+
+    <script>
+    var pagination = pagination.render({
+        mountEl:'#box',
+        count:180,
+        groups:5,
+        curPage:17,
+        prev:'上一页',
+        layout:['count','prev','page','next','limits','refresh','skip'],
+        next:'下一页',
+        callback:function(obj){
+            //pagination上的事件操作后的回调函数，比如获取数据
+            //obj包含当前分页的所有参数，比如obj.curPage,obj.pagiSize
+            console.log(obj,'oobbjj');
+        }
+    });
+
+    document.getElementById('btn').onclick = function(){
+        pagination.update({curPage:20,count:300});
+    }
+
+    </script>
+</body>
+</html>
+

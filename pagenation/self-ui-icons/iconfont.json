@@ -1,0 +1,37 @@
+{
+  "id": "2013344",
+  "name": "sef-ui-icons",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "self-ui-icons",
+  "glyphs": [
+    {
+      "icon_id": "494634",
+      "name": "success_1f",
+      "font_class": "-success",
+      "unicode": "e002",
+      "unicode_decimal": 57346
+    },
+    {
+      "icon_id": "2857002",
+      "name": "错误",
+      "font_class": "-error",
+      "unicode": "e003",
+      "unicode_decimal": 57347
+    },
+    {
+      "icon_id": "5756798",
+      "name": "上传失败（线）",
+      "font_class": "-warning",
+      "unicode": "e004",
+      "unicode_decimal": 57348
+    },
+    {
+      "icon_id": "2678635",
+      "name": "刷新",
+      "font_class": "-refresh",
+      "unicode": "e001",
+      "unicode_decimal": 57345
+    }
+  ]
+}

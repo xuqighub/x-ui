@@ -1,0 +1,124 @@
+.ui-disabled{
+    color: #d2d2d2!important;
+    cursor: not-allowed!important;
+}
+.ui-pagination{
+    font-size: 0;
+    width:100%;
+    margin:16px 0;
+}
+.ui-pagination,
+.ui-pagination *{
+    box-sizing: content-box;
+}
+button, input, optgroup, option, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    outline: 0;
+}
+.ui-pagination>:first-child{
+    margin-left: 0 !important;
+}
+.ui-pagination>:last-child{
+    margin-right: 0 !important;
+}
+.ui-pagination input:focus, 
+.ui-pagination button:focus, 
+.ui-pagination select:focus {
+    border-color: #009688!important;
+    outline:none;
+}
+.ui-pagination span,
+.ui-pagination a,
+.ui-pagination input,
+.ui-pagination button{
+    border: 1px solid #e2e2e2;
+}
+.ui-pagination a{
+    text-decoration:none;
+}
+.ui-pagination a, 
+.ui-pagination span {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 15px;
+    height: 28px;
+    line-height: 28px;
+    margin: 0 -1px 5px 0;
+    background-color: #fff;
+    color: #333;
+    font-size: 12px;
+}
+.ui-pagination .ui-pagenation-count,
+.ui-pagination .ui-pagenation-limits,
+.ui-pagination .ui-pagenation-refresh,
+.ui-pagination .ui-pagenation-skip{
+    border:none;
+    margin-left:10px;
+    margin-right:10px;
+    padding:0;
+    vertical-align: top;
+}
+.ui-pagenation-skip{
+    display:flex;
+}
+.ui-pagenation-refresh i{
+    font-size:18px;
+}
+.ui-pagination select{
+    height: 22px;
+    padding: 3px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid #e2e2e2;
+}
+.ui-pagination input,
+.ui-pagination button{
+    height: 30px;
+    line-height: 28px;
+    border-radius: 2px;
+    vertical-align: top;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+.ui-pagination input{
+    width: 40px;
+    margin: 0 10px;
+    padding: 0 3px;
+    text-align: center;
+}
+.ui-pagination button{
+    margin-left: 10px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.ui-pagination button:focus{
+    border:
+}
+.ui-pagenation-pager{
+    display:inline-block;
+}
+.ui-pagination .ui-pagenation-spr {
+    color: #999;
+    font-weight: 700;
+}
+.ui-pagination .ui-pagenation-cur{
+    position: relative;
+}
+.ui-pagination-em,
+.ui-pagination em{
+    position: relative;
+    font-style:normal;
+    border-radius:2px;
+    color:#fff;
+}
+.ui-pagenation-cur .ui-pagination-em{
+    position:absolute;
+    left:-1px;
+    top:-1px;
+    width:100%;
+    height:100%;
+    padding:1px;
+}
