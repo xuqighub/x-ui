@@ -1,0 +1,121 @@
+.xui-modal-mask {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.45);
+    z-index: 1000;
+    animation-fill-mode: both;
+}
+
+.xui-modal-content {
+    z-index: 1000;
+    margin: auto;
+    background:#fff;
+    margin-top:100px;
+}
+
+.xui-modal-wrap {
+    position: fixed;
+    display: flex;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.xui-modal-box {
+    display: none;
+}
+
+.ui-modal-show .xui-modal-mask {
+    display: block;
+}
+
+.ui-modal-show .xui-modal-box {
+    display: block;
+}
+
+.xui-modal-content {
+    z-index: 1100;
+}
+
+.zoomIn {
+    animation-duration: 0.25s;
+    animation-name: zoomIn;
+}
+
+@-webkit-keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.zoomOut {
+    animation-duration: 0.45s;
+    animation-name: zoomOut;
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.fadeOut {
+    animation-duration: 0.25s;
+    animation-name: fadeOut;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation-duration: 0.25s;
+    animation-name: fadeIn;
+}

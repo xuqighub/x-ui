@@ -3,7 +3,7 @@
         constructor({
             mountEl,
             columns,
-            dataSource = {},
+            dataSource = {para={}},
             pagination = {
                 pageSize: 10
             },
@@ -247,7 +247,6 @@
                 }
                 mountEl.querySelector('.ui-table').appendChild(fragment);
             }
-            
         }
 
         //根据数据生成的trs

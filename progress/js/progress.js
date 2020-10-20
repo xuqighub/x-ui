@@ -2,7 +2,7 @@
     class Progress{
         constructor({mountEl,percent=0,color,stripes = true,stripesMove = true}){
             //挂载的元素节点
-            this.mountEl = mountEl;
+            this.mountEl = typeof mountEl === 'object' ? mountEl : document.querySelector(mountEl);
             //初始化可以给一个进度
             this.percent = percent;
             //进度条北京颜色，也可以直接通过css设置
