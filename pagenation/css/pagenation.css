@@ -46,10 +46,12 @@ button, input, optgroup, option, select, textarea {
     padding: 0 15px;
     height: 28px;
     line-height: 28px;
-    margin: 0 -1px 5px 0;
-    background-color: #fff;
+    margin: 0 -1px 0 0;
     color: #333;
     font-size: 12px;
+}
+.ui-pagination-em{
+    background-color:#009688;
 }
 .ui-pagination .ui-pagenation-count,
 .ui-pagination .ui-pagenation-limits,
@@ -61,11 +63,15 @@ button, input, optgroup, option, select, textarea {
     padding:0;
     vertical-align: top;
 }
+.ui-pagination .ui-pagenation-count,
+.ui-pagination .ui-pagenation-skip,
+.ui-pagination .ui-pagenation-refresh{
+    height:30px;
+    line-height:30px;
+}
+
 .ui-pagenation-skip{
     display:flex;
-}
-.ui-pagenation-refresh i{
-    font-size:18px;
 }
 .ui-pagination select{
     height: 22px;
@@ -76,12 +82,11 @@ button, input, optgroup, option, select, textarea {
 }
 .ui-pagination input,
 .ui-pagination button{
-    height: 30px;
+    height: 28px;
     line-height: 28px;
     border-radius: 2px;
     vertical-align: top;
     background-color: #fff;
-    box-sizing: border-box;
 }
 .ui-pagination input{
     width: 40px;
@@ -95,7 +100,7 @@ button, input, optgroup, option, select, textarea {
     cursor: pointer;
 }
 .ui-pagination button:focus{
-    border:
+    border-color: #009688;
 }
 .ui-pagenation-pager{
     display:inline-block;
@@ -121,4 +126,12 @@ button, input, optgroup, option, select, textarea {
     width:100%;
     height:100%;
     padding:1px;
+}
+
+.ui-pagination .ui-pagenation-refresh {
+    text-align: center;
+    text-rendering: optimizeLegibility;
+    line-height: 36px;
+    color:#009688;
+    font-size: 18px;
 }

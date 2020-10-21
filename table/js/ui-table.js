@@ -3,7 +3,7 @@
         constructor({
             mountEl,
             columns,
-            dataSource = {para={}},
+            dataSource = {},
             pagination = {
                 pageSize: 10
             },
@@ -14,6 +14,8 @@
             loading,
             fillRows = false,
         }) {
+            //给para一个默认值
+            dataSource.para = {},
             //挂载的目标元素
             this.mountEl = document.querySelector(mountEl);
             //数据字段格式
