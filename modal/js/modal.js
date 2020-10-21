@@ -85,10 +85,12 @@ class Modal {
                 ${this.mask ? '<div class="xui-modal-mask"></div>' : ''}
                 <div class="xui-modal-box">
                     <div class="xui-modal-wrap">
-                        <div class="xui-modal-content" style="width:${width ? width + 'px;' : 'auto;'}">
-                            ${header ? mHeader : ''}
-                            <div class="xui-modal-body"></div>
-                            ${footer ? mFooter : ''}
+                        <div class="xui-modal-content-box">
+                            <div class="xui-modal-content" style="width:${width ? width + 'px;' : 'auto;'}">
+                                ${header ? mHeader : ''}
+                                <div class="xui-modal-body"></div>
+                                ${footer ? mFooter : ''}
+                            </div>
                         </div>
                     </div>
                 </div>

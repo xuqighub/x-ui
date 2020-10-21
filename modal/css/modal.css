@@ -9,12 +9,13 @@
     z-index: 1000;
     animation-fill-mode: both;
 }
-
+.xui-modal-content-box{
+    margin: auto;
+    margin-top:100px;
+}
 .xui-modal-content {
     z-index: 1000;
-    margin: auto;
     background:#fff;
-    margin-top:100px;
 }
 
 .xui-modal-wrap {
@@ -38,10 +39,6 @@
 
 .ui-modal-show .xui-modal-box {
     display: block;
-}
-
-.xui-modal-content {
-    z-index: 1100;
 }
 
 .zoomIn {
@@ -147,6 +144,8 @@
 .xui-modal-success,
 .xui-modal-error {
     border-radius: 2px;
+    margin:auto;
+    margin-top:100px;
 }
 
 .xui-modal-confirm .xui-modal-body,

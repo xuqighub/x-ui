@@ -151,7 +151,7 @@
             content: document.querySelector('.box2'),
             mask: false
         });
-        //带有header
+        //带有header，可以设置是否拖拽，后面的静态方法中没有header不能拖拽
         let modal4 = new Modal({
             content: document.querySelector('.box3'),
             header: {
@@ -301,10 +301,11 @@
                 }
             });
         }
-        //success,没有按钮的，上面 其他的都可以
+        //success,没有按钮的，上面 其他的都可以,还可以设置宽度
         document.querySelector('.btn-success2').onclick = function () {
             Modal.success({
-                title: 'this is a success',
+                title: 'this is a success2',
+                width:1000,
                 autoFade: 3000,
                 noFooter: true,
             });
