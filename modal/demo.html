@@ -15,214 +15,12 @@
             display: none;
             background: #fff;
             margin: 0 auto;
-            
-        }
 
-        .xui-modal-header{
-            display:flex;
-            color: rgba(0,0,0,.85);
-            border-bottom: 1px solid #f0f0f0;
-            border-radius: 2px 2px 0 0;
-        }
-        .xui-modal-title{
-            margin: 0;
-            padding: 16px 24px;
-            color: rgba(0,0,0,.85);
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 22px;
-        }
-        .xui-modal-body{
-            padding:24px;
-        }
-        .xui-modal-confirm,
-        .xui-modal-info,
-        .xui-modal-warning,
-        .xui-modal-success,
-        .xui-modal-error
-        {
-            border-radius: 2px;
-        }
-        .xui-modal-confirm .xui-modal-body,
-        .xui-modal-info .xui-modal-body,
-        .xui-modal-warning .xui-modal-body,
-        .xui-modal-success .xui-modal-body,
-        .xui-modal-error .xui-modal-body
-        {
-            padding:32px 32px 24px;
-        }
-        .xui-modal-close{
-            display: block;
-            width: 56px;
-            height: 56px;
-            font-size: 16px;
-            font-style: normal;
-            line-height: 56px;
-            color: rgba(0,0,0,.45);
-            background: transparent;
-            font-weight: 700;
-            line-height: 1;
-            transition: color .3s;
-            text-align: center;
-            text-transform: none;
-            text-rendering: auto;
-            border:none;
-            background:none;
-            cursor: pointer;
-            margin-left:auto;
-            outline:none;
-        }
-        .xui-modal-close:focus, 
-        .xui-modal-close:hover {
-            color: rgba(0,0,0,.75);
-            text-decoration: none;
-        }
-        .xui-modal-footer{
-            padding: 10px 16px;
-            text-align: right;
-            background: transparent;
-            border-top: 1px solid #f0f0f0;
-            border-radius: 0 0 2px 2px;
-        }
-        .xui-modal-confirm .xui-modal-footer,
-        .xui-modal-info .xui-modal-footer,
-        .xui-modal-warning .xui-modal-footer,
-        .xui-modal-success .xui-modal-footer,
-        .xui-modal-error .xui-modal-footer
-        {
-            padding:0;
-            margin-top:24px;
-            border-top: none;
-        }
-        .xui-modal-footer>button{
-            line-height: 1.5715;
-            position: relative;
-            display: inline-block;
-            font-weight: 400;
-            white-space: nowrap;
-            text-align: center;
-            box-shadow: 0 2px 0 rgba(0,0,0,.015);
-            cursor: pointer;
-            transition: all .3s cubic-bezier(.645,.045,.355,1);
-            user-select: none;
-            height: 32px;
-            padding: 4px 15px;
-            font-size: 14px;
-            border-radius: 2px;
-            color: rgba(0,0,0,.85);
-            background: #fff;
-            border: 1px solid #d9d9d9;
-            outline:none;
-        }
-        .xui-modal-footer button + button{
-            margin-left:8px;
-        }
-        .xui-modal-footer button >span{
-            display:inline-block;
-        }
-        .xui-modal-footer>button:focus, 
-        .xui-modal-footer>button:hover {
-            color: #40a9ff;
-            background: #fff;
-            border-color: #40a9ff;
-        }
-        .xui-modal-footer-button.xui-modal-btn-confirm{
-            color: #fff;
-            background: #1890ff;
-            border-color: #1890ff;
-            text-shadow: 0 -1px 0 rgba(0,0,0,.12);
-            box-shadow: 0 2px 0 rgba(0,0,0,.045);
-        }
-        .xui-modal-footer-button.xui-modal-btn-confirm:hover,
-        .xui-modal-footer-button.xui-modal-btn-confirm:focus{
-            color: #fff;
-            background: #40a9ff;
-            border-color: #40a9ff;
-        }
-        .xui-modal-title-icon{
-            float:left;
-            font-style: normal;
-            text-transform: none;
-            vertical-align: -.125em;
-            text-align: center;
-            font-size:22px;
-            margin-right:16px;
-            line-height: 0;
-        }
-        .xui-modal-body-title .xui-modal-title-icon{
-            color:#faad14;
-        }
-        .xui-modal-confirm .xui-modal-title-icon{
-            color:#faad14;
-        }
-        .xui-modal-error .xui-modal-title-icon{
-            color:#ff4d4f;
-        }
-        .xui-modal-info .xui-modal-title-icon{
-            color:#1890ff;
-        }
-        .xui-modal-success .xui-modal-title-icon{
-            color:#52c41a;
-        }
-        .xui-modal-body-title-context{
-            display: block;
-            overflow: hidden;
-            color: rgba(0,0,0,.85);
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 1.4;
-            word-break: break-all;
-        }
-        .xui-modal-body-content{
-            margin-left:38px;
-            margin-top:8px;
-            color:rgba(0,0,0,.85);
-            font-size:14px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-        .xui-modal-loading .xui-modal-btn-confirm{
-            cursor: auto;
-            opacity: 0.8;
-        }
-        .xui-modal-loading-icon-box{
-            width:0;
-            opacity: 0;
-            transform:scale(0);
-            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        }
-        .xui-modal-loading .xui-modal-loading-icon-box{
-            width:auto;
-            opacity: 1;
-            transform:scale(1)
-        }
-        .xui-modal-loading-icon{
-            transition: margin-left 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-            padding-right:8px;
-            display: inline-block;
-            color: inherit;
-            font-style: normal;
-            line-height: 0;
-            text-align: center;
-            text-transform: none;
-            vertical-align: -0.125em;
-            text-rendering: optimizeLegibility;
-        }
-        .xui-modal-loading-spin {
-            line-height: 1;
-            display: inline-block;
-            animation: loadingCircle 1s infinite linear;
-        }
-        @keyframes loadingCircle {
-            100%{
-                transform:rotate(360deg);
-            }
         }
     </style>
 </head>
 
 <body>
-
     <div class="box box1">
         <button class="btn-close1">close</button>
     </div>
@@ -243,6 +41,8 @@
     <button class="btn-error">error</button>
     <button class="btn-success">success</button>
     <button class="btn-success2">success2</button>
+
+    <!-- confirm结构 -->
     <!-- <div class="xui-modal-container" >
         <div class="xui-modal-mask" style="display: block;"></div>
         <div class="xui-modal-box" style="display: block;">
@@ -273,55 +73,117 @@
             </div>
         </div>
     </div> -->
+
+    <!-- 拖拽栗子 -->
+    <!-- <div class="xui-modal-container ui-modal-show">
+        <div class="xui-modal-mask"></div>
+        <div class="xui-modal-box">
+            <div class="xui-modal-wrap">
+                <div class="xui-modal-content" style="width:auto;">
+
+                    <div class="xui-modal-header xui-modal-drag">
+                        <div class="xui-modal-title">
+                            <div>Modal Title</div>
+                        </div>
+                        <button class="xui-modal-close">
+                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="close" width="1em"
+                                height="1em" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="xui-modal-body">
+                        <div class="box box3" style="display: block;">width header box3</div>
+                    </div>
+
+                    <div class="xui-modal-footer">
+                        <button class="xui-modal-footer-button modal-btn0">btn1</button><button
+                            class="xui-modal-footer-button modal-btn1">btn2</button><button
+                            class="xui-modal-footer-button modal-btn2">btn3</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
-     
+        document.querySelector('.xui-modal-drag').onmousedown = function(ev){
+            let startX = ev.pageX,
+                startY = ev.pageY,
+                content =  document.querySelector('.xui-modal-content'),
+                //获取上一次的tranform中的值
+                transform = getComputedStyle(content).transform.substring(7).split(','),
+                prevX = transform[4] ? parseFloat(transform[4]) : 0,
+                prevY = transform[5] ? parseFloat(transform[5]) : 0;
+                //添加处于拖拽过程中的类
+                content.classList.add('xui-modal-dragging');
+            document.onmousemove = function(ev){
+                let disX = ev.pageX - startX;
+                let disY = ev.pageY - startY;
+                document.querySelector('.xui-modal-content').style.transform = `translate(${prevX+disX}px,${prevY+disY}px)`;
+            }
+            document.onmouseup = function(){
+                document.onmousemove = null;
+                document.onmouseup = null;
+                //移除处于拖拽过程中的类
+                content.classList.remove('xui-modal-dragging');
+                return false;
+            }
+        }
+    </script> -->
+    
+    <script>
         //普通元素,仅弹出目标物
         let modal = new Modal({
             content: document.querySelector('.box1'),
         });
-        
+
         //写入string 格式，并自动隐藏
         let modal2 = new Modal({
             content: 'auto fade',
-            autoFade:800
+            autoFade: 800
         });
-      
+
         //不带mask层
         let modal3 = new Modal({
             content: document.querySelector('.box2'),
-            mask:false
+            mask: false
         });
         //带有header
         let modal4 = new Modal({
             content: document.querySelector('.box3'),
-            header:{
-                title:'Modal Title',
-                drag:false
+            header: {
+                title: 'Modal Title',
+                draggable : true
             },
-            footer:['btn1','btn2','btn3']
+            footer: ['btn1', 'btn2', 'btn3']
         });
         //给每隔按钮添加事件
-        modal4.click(function(ev){
+        modal4.click(function (ev) {
             console.log(ev.target);
         })
         //带有footer，如果传入一个数组，按钮值是数组中的值，如果传入字符串则是渲染字符串，
         //如果传入一个对象则根据对象来配置，并切实是默认按钮（一个取消，一个确定）
+        //width给modal一个宽度，不写以内容来撑开
         let modal5 = new Modal({
             content: document.querySelector('.box4'),
+            width: 600,
             // footer:'<button>123</button><button>156156</button>'
             // footer:['btn1','btn2','btn3']
-            footer:{
-                loading:true,
-                cancelText:'重置',
-                onCancel:function(hide){
+            footer: {
+                loading: true,
+                cancelText: '重置',
+                onCancel: function (hide) {
                     hide();
                 },
-                onOk:function(hide){
-                    setTimeout(()=>{
+                onOk: function (hide) {
+                    setTimeout(() => {
                         hide();
-                    },2000)
+                    }, 2000)
                 },
-                okText:'提交',
+                okText: '提交',
             },
         });
 
@@ -345,104 +207,106 @@
             modal3.hide();
         }
         //显示自动隐藏的modal
-        document.querySelector('.btn-autoFade').onclick = function(){
+        document.querySelector('.btn-autoFade').onclick = function () {
             modal2.show();
         }
         //不显示mask
-        document.querySelector('.btn-nomask').onclick = function(){
+        document.querySelector('.btn-nomask').onclick = function () {
             modal3.show();
         }
         //带有header的modal
-        document.querySelector('.btn-withHeader').onclick = function(){
+        document.querySelector('.btn-withHeader').onclick = function () {
             modal4.show();
         }
         //带有footer的modal
-        document.querySelector('.btn-withFooter').onclick = function(){
+        document.querySelector('.btn-withFooter').onclick = function () {
             modal5.show();
         }
         //带有footer的modal,一般参数和普通modal一致
         //loading 表示是否是异步处理，点击确认后出现loading状态
         //onOk表示点击确认后的回调函数，参数也是一个回调函数，当调用这个参数中的回调函数时，会关闭确认框，
         //一般用于异步结束关闭确认框，如果没有onOk参数，那么同onCancel一致，直接关闭确认框
-        document.querySelector('.btn-confirm').onclick = function(){
+        //width可以设置宽度，不写该属性默认为416px
+        document.querySelector('.btn-confirm').onclick = function () {
             Modal.confirm({
-                title:'this is a confirm',
-                content:'now msg mmmmm meg msg',
-                layerClose:true,
-                loading:true,
-                onCancel:function(){
+                title: 'this is a confirm',
+                content: 'now msg mmmmm meg msg',
+                width: 416,
+                layerClose: true,
+                loading: true,
+                onCancel: function () {
                     console.log(666);
                 },
-                onOk:function(hide){
-                    setTimeout(function(){
+                onOk: function (hide) {
+                    setTimeout(function () {
                         hide();
-                    },1000)
+                    }, 1000)
                 }
             });
         }
         //info
-        document.querySelector('.btn-info').onclick = function(){
+        document.querySelector('.btn-info').onclick = function () {
             Modal.info({
-                title:'this is a info',
-                content:'now msg mmmmm meg msg',
-                layerClose:true,
-                loading:true,
-                onOk:function(hide){
-                    setTimeout(function(){
+                title: 'this is a info',
+                content: 'now msg mmmmm meg msg',
+                layerClose: true,
+                loading: true,
+                onOk: function (hide) {
+                    setTimeout(function () {
                         hide();
-                    },1000)
+                    }, 1000)
                 }
             });
         }
         //warning
-        document.querySelector('.btn-warning').onclick = function(){
+        document.querySelector('.btn-warning').onclick = function () {
             Modal.warning({
-                title:'this is a warning',
-                content:'now msg mmmmm meg msg',
-                layerClose:true,
-                loading:true,
-                onOk:function(hide){
-                    setTimeout(function(){
+                title: 'this is a warning',
+                content: 'now msg mmmmm meg msg',
+                layerClose: true,
+                loading: true,
+                onOk: function (hide) {
+                    setTimeout(function () {
                         hide();
-                    },1000)
+                    }, 1000)
                 }
             });
         }
         //error
-        document.querySelector('.btn-error').onclick = function(){
+        document.querySelector('.btn-error').onclick = function () {
             Modal.error({
-                title:'this is a error',
-                content:'',
-                layerClose:true,
-                loading:true,
-                onOk:function(hide){
-                    setTimeout(function(){
+                title: 'this is a error',
+                content: '',
+                layerClose: true,
+                loading: true,
+                onOk: function (hide) {
+                    setTimeout(function () {
                         hide();
-                    },1000)
+                    }, 1000)
                 }
             });
         }
         //success
-        document.querySelector('.btn-success').onclick = function(){
+        document.querySelector('.btn-success').onclick = function () {
             Modal.success({
-                title:'this is a success',
-                content:'',
-                layerClose:true,
-                loading:true,
-                autoFade:3000,
-                onOk:function(hide){
-                    setTimeout(function(){
+                title: 'this is a success',
+                content: '',
+                layerClose: true,
+                loading: true,
+                autoFade: 3000,
+                onOk: function (hide) {
+                    setTimeout(function () {
                         hide();
-                    },1000)
+                    }, 1000)
                 }
             });
         }
         //success,没有按钮的，上面 其他的都可以
-        document.querySelector('.btn-success2').onclick = function(){
+        document.querySelector('.btn-success2').onclick = function () {
             Modal.success({
-                title:'this is a success',
-                autoFade:3000,
-                noFooter:true,
+                title: 'this is a success',
+                autoFade: 3000,
+                noFooter: true,
             });
         }
     </script>

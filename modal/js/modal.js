@@ -6,6 +6,7 @@ class Modal {
         layerClose = true,
         mask = true,
         header,
+        width,
         footer,
     }) {
         //填充内容,可以使elemet对象，也可以是字符串格式
@@ -22,6 +23,8 @@ class Modal {
         this.header = header;
         //footer
         this.footer = footer;
+        //modal宽度
+        this.width = width;
         //初始化
         this.init();
     }
@@ -48,9 +51,10 @@ class Modal {
         let {
             header,
             footer,
+            width
         } = this;
         let mHeader = `
-            <div class="xui-modal-header">
+            <div class="xui-modal-header ${header?.draggable ? 'xui-modal-drag' : ''}">
                 <div class="xui-modal-title">
                     <div>${header?.title ? header?.title : ''}</div>
                 </div>
@@ -81,7 +85,7 @@ class Modal {
                 ${this.mask ? '<div class="xui-modal-mask"></div>' : ''}
                 <div class="xui-modal-box">
                     <div class="xui-modal-wrap">
-                        <div class="xui-modal-content">
+                        <div class="xui-modal-content" style="width:${width ? width + 'px;' : 'auto;'}">
                             ${header ? mHeader : ''}
                             <div class="xui-modal-body"></div>
                             ${footer ? mFooter : ''}
@@ -102,7 +106,7 @@ class Modal {
     }
     //关于modal初始化的事件
     initEvent = () => {
-        let {footer={},container,mask,layerClose,autoFade,hide} = this;
+        let {footer={},container,mask,layerClose,autoFade,hide,header} = this;
         let {onCancel,loading,onOk} = footer;
         //监听弹出和隐藏的animation事件
         container.addEventListener('animationend', (ev) => {
@@ -120,8 +124,38 @@ class Modal {
                 container.classList.remove('ui-modal-show');
                 //如果有loading类删除loading类
                 container.classList.remove('xui-modal-loading');
+                //如果是拖拽则把拖拽重置
+                if(header?.draggable){
+                    container.querySelector('.xui-modal-content').style.transform = '';
+                }
             }
         });
+        //是否可拖拽
+        if(header?.draggable){
+            container.querySelector('.xui-modal-drag').onmousedown = function(ev){
+                let startX = ev.pageX,
+                    startY = ev.pageY,
+                    content =  container.querySelector('.xui-modal-content'),
+                    //获取上一次的tranform中的值
+                    transform = getComputedStyle(content).transform.substring(7).split(','),
+                    prevX = transform[4] ? parseFloat(transform[4]) : 0,
+                    prevY = transform[5] ? parseFloat(transform[5]) : 0;
+                    //添加处于拖拽过程中的类
+                    content.classList.add('xui-modal-dragging');
+                document.onmousemove = function(ev){
+                    let disX = ev.pageX - startX;
+                    let disY = ev.pageY - startY;
+                    container.querySelector('.xui-modal-content').style.transform = `translate(${prevX+disX}px,${prevY+disY}px)`;
+                }
+                document.onmouseup = function(){
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                    //移除处于拖拽过程中的类
+                    content.classList.remove('xui-modal-dragging');
+                    return false;
+                }
+            }
+        }
         //点击主体内容外面关闭弹出层
         container.addEventListener('click', (ev) => {
             if (ev.target.classList.contains('xui-modal-wrap')) {
@@ -171,7 +205,7 @@ class Modal {
 }
 
 Modal.containerEl = (config) => {
-    let {title,content,type,okText,cancelText,loading,noFooter} = config;
+    let {title,content,type,okText,cancelText,loading,noFooter,width} = config;
     //不同的信息应该是不同的icon 
     let icon = function(type){
         switch(type){
@@ -192,7 +226,7 @@ Modal.containerEl = (config) => {
             <div class="xui-modal-mask"></div>
             <div class="xui-modal-box">
                 <div class="xui-modal-wrap">
-                    <div class="xui-modal-content xui-modal-${type}" style="width:416px;">
+                    <div class="xui-modal-content xui-modal-${type}" style="width:${width ? width+'px' : '416px;'}">
                         <div class="xui-modal-body">
                             <div class="xui-modal-body-title">
                                 <span class="xui-modal-title-icon">
@@ -228,7 +262,12 @@ Modal.containerEl = (config) => {
 Modal.initEvent = function({container,mask,layerClose,autoFade,onOk,onCancel,loading}){
     //弹出动画结束后就移除container元素
     container.addEventListener('animationend', (ev) => {
-        if (ev.animationName === 'zoomOut') {
+        if (ev.animationName === 'zoomIn') {
+            //移除进入动画类
+            ev.target.classList.remove('zoomIn');
+            //移除mask的动画进入类
+            mask && container.querySelector('.xui-modal-mask').classList.remove('fadeIn');
+        }else if (ev.animationName === 'zoomOut') {
             document.body.removeChild(container);
         }
     });
@@ -282,6 +321,7 @@ Modal.hide = function({container,mask}){
 Modal.confirm = function({
     title,
     content,
+    width,
     okText = "确认",
     cancelText = "取消",
     autoFade,
@@ -292,7 +332,7 @@ Modal.confirm = function({
     onOk
 }){
     //生成结构插入页面底部
-    let container = Modal.containerEl({title,content,type:'confirm',okText,cancelText,loading});
+    let container = Modal.containerEl({title,content,type:'confirm',okText,cancelText,loading,width});
     document.querySelector('body').appendChild(container);
     //初始化事件
     Modal.initEvent({container,mask,layerClose,autoFade,onOk,onCancel,loading})
@@ -303,6 +343,7 @@ Modal.confirm = function({
 Modal.info = function({
     title,
     content,
+    width,
     okText = "我知道了",
     autoFade,
     loading,
@@ -311,7 +352,7 @@ Modal.info = function({
     onOk
 }){
     //生成结构插入页面底部
-    let container = Modal.containerEl({title,content,type:'info',okText,loading});
+    let container = Modal.containerEl({title,content,type:'info',okText,loading,width});
     document.querySelector('body').appendChild(container);
     //初始化事件
     Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
@@ -322,6 +363,7 @@ Modal.info = function({
 Modal.warning = function({
     title,
     content,
+    width,
     okText = "我知道了",
     autoFade,
     loading,
@@ -330,7 +372,7 @@ Modal.warning = function({
     onOk
 }){
     //生成结构插入页面底部
-    let container = Modal.containerEl({title,content,type:'warning',okText,loading});
+    let container = Modal.containerEl({title,content,type:'warning',okText,loading,width});
     document.querySelector('body').appendChild(container);
     //初始化事件
     Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
@@ -341,6 +383,7 @@ Modal.warning = function({
 Modal.error = function({
     title,
     content,
+    width,
     okText = "我知道了",
     autoFade,
     loading,
@@ -349,7 +392,7 @@ Modal.error = function({
     onOk
 }){
     //生成结构插入页面底部
-    let container = Modal.containerEl({title,content,type:'error',okText,loading});
+    let container = Modal.containerEl({title,content,type:'error',okText,loading,width});
     document.querySelector('body').appendChild(container);
     //初始化事件
     Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
@@ -360,6 +403,7 @@ Modal.error = function({
 Modal.success = function({
     title,
     content,
+    width,
     okText = "我知道了",
     autoFade,
     loading,
@@ -369,7 +413,7 @@ Modal.success = function({
     noFooter,
 }){
     //生成结构插入页面底部
-    let container = Modal.containerEl({title,content,type:'success',okText,loading,noFooter});
+    let container = Modal.containerEl({title,content,type:'success',okText,loading,noFooter,width});
     document.querySelector('body').appendChild(container);
     //初始化事件
     Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
