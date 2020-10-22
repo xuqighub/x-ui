@@ -101,10 +101,6 @@
     background-color:#fafafa;
 }
 
-.ui-table-scrollbar{
-    /* box-shadow: 0 1px 0 1px #fafafa; */
-}
-
 .ui-table-container .ui-table-selection-column{
     padding:0;
     text-align: center;

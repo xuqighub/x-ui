@@ -7,16 +7,18 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/progress.css">
     <style>
-        .box {
+        .box,
+        .box2 {
             border: 1px solid #c00;
             width: 600px;
-            height: 400px;
-            margin: 50px 0 0 50px;
+            height: 200px;
+            margin: 20px 0 0 50px;
         }
 
-        .xui-progress{
-            margin-top:20px;
+        .xui-progress {
+            margin-top: 20px;
         }
+
     </style>
 </head>
 
@@ -28,40 +30,96 @@
     </div>
     <button class="btn-failed">btn-failed</button>
     <button class="btn-update">btn-update</button>
+    <div class="box2">
+        <!-- <div class="xui-progress-circle ">
+            <div class="xui-progress-inner" style="width: 120px; height: 120px; font-size: 24px;">
+                <svg viewBox="0 0 100 100">
+                    <path class="xui-progress-circle-trail" d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke-linecap="round" stroke-width="6" fill-opacity="0"
+                        style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease 0s, stroke-width 0.06s ease 0.3s;">
+                    </path>
+                    <path class="xui-progress-circle-path" d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke="" stroke-linecap="round" stroke-width="6" opacity="1" fill-opacity="0"
+                        style="stroke-dasharray: 236.248px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease 0s, stroke-width 0.06s ease 0.3s;">
+                    </path>
+                </svg>
+                <span class="xui-progress-text" title="80%">80%</span>
+            </div>
+        </div> -->
+    </div>
+    <button class="btn-update-circle">btn-update-circle</button>
     <script src="js/progress.js"></script>
     <script>
-
         //创建进度条对象
         let progress = window.progress.render({
             mountEl: document.querySelector('.box'),
-            percent:40,
+            percent: 40,
         });
-        //创建进度条对象
+        //创建进度条对象，自定义内容
         let progress1 = window.progress.render({
             mountEl: document.querySelector('.box'),
-            percent:50,
-            color:'#00A3F3',
+            percent: 50,
+            color: '#00A3F3',
+            format: (percent) => percent + '分'
         });
         //创建进度条对象
-        let progress2 =  window.progress.render({
+        let progress2 = window.progress.render({
             mountEl: document.querySelector('.box'),
-            percent:60,
-            color:'#00A3F3',
-            stripes:false,
+            percent: 60,
+            color: '#00A3F3',
+            stripes: false,
         });
         //将进度条置为失败状态
-        document.querySelector('.btn-failed').onclick = function(){
+        document.querySelector('.btn-failed').onclick = function () {
             progress.failed();
         }
         //更新进度条的进度，传入一个数值
-        document.querySelector('.btn-update').onclick = function(){
-            let i=0;
-            setInterval(()=>{
-                i+=1;
+        document.querySelector('.btn-update').onclick = function () {
+            let i = 0;
+            setInterval(() => {
+                i += 1;
                 progress.update(i);
-            },100)
-            
+            }, 100)
         }
+
+        //仅生成progress结构和进度数据,返回的是html结构
+        let lineStrct = window.progress.render({
+            percent: 80,
+        }).getStruct();
+        let lineT = document.createElement('div');
+        lineT.innerHTML = lineStrct;
+        document.querySelector('.box').appendChild(lineT);
+
+
+        // 下面是环形进度条
+
+        //创建进度条对象,color也是可以使用的
+        let progress3 = window.progress.render({
+            mountEl: document.querySelector('.box2'),
+            percent: 20,
+            stripes: false,
+            type: 'circle',
+            format: (percent) => percent + '分'
+        });
+
+
+        //更新进度条的进度，传入一个数值
+        document.querySelector('.btn-update-circle').onclick = function () {
+            let i = 0;
+            setInterval(() => {
+                i += 1;
+                progress3.update(i);
+            }, 100)
+        }
+
+        //仅生成progress结构和进度数据,返回的是html结构
+        let circleStrct = window.progress.render({
+            percent: 80,
+            type:'circle',
+            width:80
+        }).getStruct();
+        let circleT = document.createElement('div');
+        circleT.style="margin-left:20px;display:inline-block;"
+        circleT.innerHTML = circleStrct;
+        document.querySelector('.box2').appendChild(circleT);
     </script>
 </body>
 
