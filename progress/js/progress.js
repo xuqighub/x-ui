@@ -52,6 +52,9 @@
             //成功状态
             if(this.type === 'line'){
                 this.progressEl.classList.add('xui-success-status');
+                //成功了不应该继续有动效，给人以错觉
+                this.progressEl.classList.remove('ui-progress-stripesMove');
+                // this.progressEl.classList.remove('xui-progress-stripes');
             }else if(this.type === 'circle'){
                 this.progressEl.querySelector('.xui-progress-inner').style.setProperty('--color','#52c41a');
                 this.progressEl.querySelector('.xui-progress-text').title = 'success';
@@ -60,29 +63,34 @@
                         <path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"></path>
                     </svg>
                 `;
+                console.log(999)
             }
         }
         //更新进度条的进度，传入一个数值
         update = (percent)=>{
             percent = percent >= 100 ? 100 : percent;
-            let textContent = typeof this.format === 'function' ? this.format(percent) : percent + '%';
+            let textContent = typeof this.format === 'function' ? this.format.call(this,percent) : percent + '%';
             if(this.type==='line'){
                 //如果是line形式的
                 this.progressEl.querySelector('.xui-progress-bar').textContent = textContent;
                 this.progressEl.style.setProperty('--percent',percent +'%');
             }else if(this.type === 'circle'){
                 //如果是圆形的
-                this.progressEl.querySelector('.xui-progress-text').textContent = textContent;
+                if(percent === 100 || typeof this.format === 'function' && this.format.call(this,percent)){
+                    //当在format里面调用了sucess时，并且没有返回任何值，则不用再去更新text文字
+                }else{
+                    this.progressEl.querySelector('.xui-progress-text').textContent = textContent;
+                }
                 this.progressEl.querySelector('.xui-progress-circle-path').style.strokeDasharray = `${Math.round(percent*295.31)/100}px, 295.31px`;
             }
         }
         //返回带有percent的progress结构，用于没有挂载点返回带percent的progress结构，（外部也是html结构）
         getStruct = ()=>{
-            let textContent = typeof this.format === 'function' ? this.format(this.percent) : this.percent + '%'
+            let textContent = typeof this.format === 'function' ? this.format.call(this,this.percent) : this.percent + '%'
             if(this.type === 'line'){
                 return (`
-                    <div class="xui-progress ${this.stripes ? 'xui-progress-stripes' : ''} ${this.stripesMove ? 'ui-progress-stripesMove' : ''}" style="--percent:${this.percent}%">
-                        <div class="xui-progress-bar" style="background-color:${this.color}">${textContent}</div>
+                    <div class="xui-progress ${this.stripes ? 'xui-progress-stripes' : ''} ${this.stripesMove ? 'ui-progress-stripesMove' : ''}" style="--percent:${this.percent}%;--color:${this.color}">
+                        <div class="xui-progress-bar" >${textContent}</div>
                     </div>
                 `);
             }else if(this.type === 'circle'){

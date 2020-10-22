@@ -55,13 +55,22 @@
         let progress = window.progress.render({
             mountEl: document.querySelector('.box'),
             percent: 40,
+            format: function(percent){
+                if(percent>=100){
+                    this.success();
+                    return '成功';
+                }
+                return percent + '分';
+            }
         });
         //创建进度条对象，自定义内容
         let progress1 = window.progress.render({
             mountEl: document.querySelector('.box'),
             percent: 50,
-            color: '#00A3F3',
-            format: (percent) => percent + '分'
+            color: '#5cb85c',
+            format: (percent) => {
+                return percent + '分';
+            }
         });
         //创建进度条对象
         let progress2 = window.progress.render({
@@ -82,7 +91,7 @@
         document.querySelector('.btn-update').onclick = function () {
             let i = 0;
             setInterval(() => {
-                i += 1;
+                i += 5;
                 progress.update(i);
             }, 100)
         }
@@ -98,13 +107,20 @@
 
         // 下面是环形进度条
 
-        //创建进度条对象,color也是可以使用的
+        //创建进度条对象,color也是可以使用的，可以在100%时调用sucess，而不返回值
         let progress3 = window.progress.render({
             mountEl: document.querySelector('.box2'),
             percent: 20,
             stripes: false,
             type: 'circle',
-            format: (percent) => percent + '分'
+            format: function(percent) {
+                if(percent>=100){
+                    //不用return值
+                    this.success();
+                }else{
+                    return percent + '分';
+                }
+            }
         });
 
 
@@ -112,7 +128,7 @@
         document.querySelector('.btn-update-circle').onclick = function () {
             let i = 0;
             setInterval(() => {
-                i += 1;
+                i += 5;
                 progress3.update(i);
             }, 100)
         }
