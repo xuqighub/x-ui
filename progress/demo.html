@@ -29,6 +29,7 @@
         </div> -->
     </div>
     <button class="btn-failed">btn-failed</button>
+    <button class="btn-success">btn-success</button>
     <button class="btn-update">btn-update</button>
     <div class="box2">
         <!-- <div class="xui-progress-circle ">
@@ -45,6 +46,8 @@
             </div>
         </div> -->
     </div>
+    <button class="btn-failed-circle">btn-failed-circle</button>
+    <button class="btn-success-circle">btn-success-circle</button>
     <button class="btn-update-circle">btn-update-circle</button>
     <script src="js/progress.js"></script>
     <script>
@@ -70,6 +73,10 @@
         //将进度条置为失败状态
         document.querySelector('.btn-failed').onclick = function () {
             progress.failed();
+        }
+        //将进度条置为成功状态
+        document.querySelector('.btn-success').onclick = function () {
+            progress.success();
         }
         //更新进度条的进度，传入一个数值
         document.querySelector('.btn-update').onclick = function () {
@@ -108,6 +115,15 @@
                 i += 1;
                 progress3.update(i);
             }, 100)
+        }
+
+        //将进度条置为失败状态
+        document.querySelector('.btn-failed-circle').onclick = function () {
+            progress3.failed();
+        }
+        //将进度条置为成功状态
+        document.querySelector('.btn-success-circle').onclick = function () {
+            progress3.success();
         }
 
         //仅生成progress结构和进度数据,返回的是html结构

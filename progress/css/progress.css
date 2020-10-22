@@ -32,6 +32,9 @@
 .xui-failed-status>.xui-progress-bar {
     background-color: #d9534f !important;
 }
+.xui-success-status>.xui-progress-bar {
+    background-color: #52c41a !important;
+}
 
 @keyframes xui-progress-bar-stripes {
     from {
