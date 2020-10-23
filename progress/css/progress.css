@@ -14,6 +14,7 @@
     text-align: center;
     color: #fff;
     line-height: 14px;
+    background-color:#5cb85c;
     background-color: var(--color);
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
     background-position: inherit;
@@ -36,7 +37,6 @@
 .xui-success-status>.xui-progress-bar {
     background-image: linear-gradient(to right, var(--color) 0%, rgb(135, 208, 104) 100%);
 }
-
 @keyframes xui-progress-bar-stripes {
     from {
         background-position: 40px 0;
@@ -91,7 +91,9 @@
 .xui-progress-inner:not(.xui-progress-circle-gradient) .xui-progress-circle-path {
     stroke: var(--color);
 }
-
+.xui-success-status:not(.xui-progress-circle-gradient) .xui-progress-circle-path {
+    stroke: #5cb85c;
+}
 .xui-progress-text {
     display: inline-block;
     width: 2em;

@@ -1,16 +1,14 @@
 !function(window){
     class Progress{
-        constructor({mountEl,percent=0,color='#00A3F3',stripes = true,stripesMove = true,width,type = 'line',format}){
+        constructor({mountEl,percent=0,color='#1890ff',stripes = {move:true},width,type = 'line',format}){
             //挂载的元素节点
             this.mountEl = typeof mountEl === 'object' ? mountEl : document.querySelector(mountEl);
             //初始化可以给一个进度
             this.percent = percent;
             //进度条北京颜色，也可以直接通过css设置
             this.color = color;
-            //是否要有条纹，默认有，不需要的话设为false
+            //是否要有条纹，默认有，不需要的话设为false,move是条纹是否移动效果,默认为true
             this.stripes = stripes;
-            //条纹是否有移动效果
-            this.stripesMove = stripesMove;
             //进度条对象
             this.progressEl = null;
             this.width = width;
@@ -49,12 +47,12 @@
         }
         //将进度条置为成功状态
         success = ()=>{
+            this.progressEl.classList.add('xui-success-status');
             //成功状态
             if(this.type === 'line'){
-                this.progressEl.classList.add('xui-success-status');
                 //成功了不应该继续有动效，给人以错觉
                 this.progressEl.classList.remove('ui-progress-stripesMove');
-                // this.progressEl.classList.remove('xui-progress-stripes');
+                this.progressEl.classList.remove('xui-progress-stripes');
             }else if(this.type === 'circle'){
                 this.progressEl.querySelector('.xui-progress-inner').style.setProperty('--color','#52c41a');
                 this.progressEl.querySelector('.xui-progress-text').title = 'success';
@@ -63,7 +61,6 @@
                         <path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"></path>
                     </svg>
                 `;
-                console.log(999)
             }
         }
         //更新进度条的进度，传入一个数值
@@ -89,7 +86,7 @@
             let textContent = typeof this.format === 'function' ? this.format.call(this,this.percent) : this.percent + '%'
             if(this.type === 'line'){
                 return (`
-                    <div class="xui-progress ${this.stripes ? 'xui-progress-stripes' : ''} ${this.stripesMove ? 'ui-progress-stripesMove' : ''}" style="--percent:${this.percent}%;--color:${this.color}">
+                    <div class="xui-progress ${this.percent===100 ? 'xui-success-status' : ''} ${this.stripes ? 'xui-progress-stripes' : ''} ${this.stripes.move ? 'ui-progress-stripesMove' : ''}" style="--percent:${this.percent}%;--color:${this.color}">
                         <div class="xui-progress-bar" >${textContent}</div>
                     </div>
                 `);
@@ -97,7 +94,7 @@
                 //过滤标签正则
                 var re = /<[^<>]+>/g;
                 return (`
-                    <div class="xui-progress-circle" ${this.width ? `style="width: ${this.width}px; height:${this.width}px;"` : ''}>
+                    <div class="xui-progress-circle ${this.percent===100 ? 'xui-success-status' : ''}" ${this.width ? `style="width: ${this.width}px; height:${this.width}px;"` : ''}>
                         <div class="xui-progress-inner" style="--color:${this.color ? this.color : '#1890ff'}">
                             <svg viewBox="0 0 100 100">
                                 <path class="xui-progress-circle-trail" d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke-linecap="round" stroke-width="6" fill-opacity="0"
@@ -107,7 +104,7 @@
                                     style="stroke-dasharray:${Math.round(this.percent*295.31)/100}px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease 0s, stroke-width 0.06s ease 0.3s;">
                                 </path>
                             </svg>
-                            <span class="xui-progress-text" title="${textContent.replace(re, '')}">${textContent}</span>
+                            <span class="xui-progress-text" title="${(textContent+'').replace(re, '')}">${textContent}</span>
                         </div>
                     </div>
                 `);
@@ -115,9 +112,45 @@
         }
     }
 
+    //静态方法
+    Progress.getStruct = function(config){
+        let {format,type='line',percent,stripes={move:true},color="#1890ff",width} = config;
+        percent = percent >= 100 ? 100 : percent;
+        let textContent = typeof format === 'function' ? format(percent) : percent + '%'
+        if(type === 'line'){
+            return (`
+                <div class="xui-progress ${percent===100 ? 'xui-success-status' : ''} ${stripes ? 'xui-progress-stripes' : ''} ${stripes.move ? 'ui-progress-stripesMove' : ''}" style="--percent:${percent}%;--color:${color}">
+                    <div class="xui-progress-bar" >${textContent}</div>
+                </div>
+            `);
+        }else if(type === 'circle'){
+            //过滤标签正则
+            var re = /<[^<>]+>/g;
+            return (`
+                <div class="xui-progress-circle ${percent===100 ? 'xui-success-status' : ''}" ${width ? `style="width: ${width}px; height:${width}px;"` : ''}>
+                    <div class="xui-progress-inner" style="--color:${color}">
+                        <svg viewBox="0 0 100 100">
+                            <path class="xui-progress-circle-trail" d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke-linecap="round" stroke-width="6" fill-opacity="0"
+                                style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease 0s, stroke-width 0.06s ease 0.3s;">
+                            </path>
+                            <path class="xui-progress-circle-path" d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke="" stroke-linecap="round" stroke-width="6" opacity="1" fill-opacity="0"
+                                style="stroke-dasharray:${Math.round(percent*295.31)/100}px, 295.31px; stroke-dashoffset: 0px; transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease 0s, stroke-width 0.06s ease 0.3s;">
+                            </path>
+                        </svg>
+                        <span class="xui-progress-text" title="${(textContent+'').replace(re, '')}">${textContent}</span>
+                    </div>
+                </div>
+            `);
+        }
+    }
     var progress = {};
     progress.render = function(obj){
-        return new Progress(obj);
+        if(obj.struct){
+            //如果只需要html结构就没必要创建一个对象
+            return Progress.getStruct(obj)
+        }else{
+            return new Progress(obj);
+        }
     }
     window.progress = progress;
 }(window);

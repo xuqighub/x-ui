@@ -18,7 +18,6 @@
         .xui-progress {
             margin-top: 20px;
         }
-
     </style>
 </head>
 
@@ -51,33 +50,34 @@
     <button class="btn-update-circle">btn-update-circle</button>
     <script src="js/progress.js"></script>
     <script>
-        //创建进度条对象
+        //创建进度条对象,有条纹，移动，不写stripes都可以
         let progress = window.progress.render({
             mountEl: document.querySelector('.box'),
             percent: 40,
-            format: function(percent){
-                if(percent>=100){
+            format: function (percent) {
+                if (percent >= 100) {
                     this.success();
                     return '成功';
                 }
                 return percent + '分';
             }
         });
-        //创建进度条对象，自定义内容
+        //创建进度条对象，自定义内容，有条纹不移动
         let progress1 = window.progress.render({
             mountEl: document.querySelector('.box'),
             percent: 50,
             color: '#5cb85c',
+            stripes:true,
             format: (percent) => {
                 return percent + '分';
             }
         });
-        //创建进度条对象
+        //创建进度条对象,stripes直接设为false，则没有条纹，默认是有的，需要移动还要添加move
         let progress2 = window.progress.render({
             mountEl: document.querySelector('.box'),
             percent: 60,
             color: '#00A3F3',
-            stripes: false,
+            stripes: false
         });
         //将进度条置为失败状态
         document.querySelector('.btn-failed').onclick = function () {
@@ -96,10 +96,17 @@
             }, 100)
         }
 
-        //仅生成progress结构和进度数据,返回的是html结构
+        //仅生成progress结构和进度数据,返回的是html结构，struct只返回结构不会创建对象
         let lineStrct = window.progress.render({
-            percent: 80,
-        }).getStruct();
+            percent: 100,
+            struct: true,
+            stripes: false,
+            format:function(percent){
+                if(percent===100){
+                    return '成功';
+                }
+            }
+        });
         let lineT = document.createElement('div');
         lineT.innerHTML = lineStrct;
         document.querySelector('.box').appendChild(lineT);
@@ -113,25 +120,15 @@
             percent: 20,
             stripes: false,
             type: 'circle',
-            format: function(percent) {
-                if(percent>=100){
+            format: function (percent) {
+                if (percent >= 100) {
                     //不用return值
                     this.success();
-                }else{
+                } else {
                     return percent + '分';
                 }
             }
         });
-
-
-        //更新进度条的进度，传入一个数值
-        document.querySelector('.btn-update-circle').onclick = function () {
-            let i = 0;
-            setInterval(() => {
-                i += 5;
-                progress3.update(i);
-            }, 100)
-        }
 
         //将进度条置为失败状态
         document.querySelector('.btn-failed-circle').onclick = function () {
@@ -142,14 +139,31 @@
             progress3.success();
         }
 
-        //仅生成progress结构和进度数据,返回的是html结构
+        //更新进度条的进度，传入一个数值
+        document.querySelector('.btn-update-circle').onclick = function () {
+            let i = 0;
+            setInterval(() => {
+                i += 5;
+                progress3.update(i);
+            }, 100)
+        }
+
+
+        //仅生成progress结构和进度数据,返回的是html结构,struct只返回结构不会创建对象
         let circleStrct = window.progress.render({
-            percent: 80,
-            type:'circle',
-            width:80
-        }).getStruct();
+            percent: 100,
+            type: 'circle',
+            width: 80,
+            struct: true,
+            format: function (percent) {
+                if (percent === 100) {
+                    return '成功'
+                }
+                return percent + '%'
+            }
+        });
         let circleT = document.createElement('div');
-        circleT.style="margin-left:20px;display:inline-block;"
+        circleT.style = "margin-left:20px;display:inline-block;"
         circleT.innerHTML = circleStrct;
         document.querySelector('.box2').appendChild(circleT);
     </script>
