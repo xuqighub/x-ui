@@ -9,9 +9,19 @@
             header,
             width,
             footer,
+            className,
         }) {
+
             //填充内容,可以使elemet对象，也可以是字符串格式
-            this.content = content;
+            if(typeof content === 'object'){
+                this.content = content;
+            }else if(typeof content === 'string'){
+                if(content.indexOf('.') === 0 || content.indexOf('#') === 0){
+                    this.content = document.querySelector(content);
+                }else {
+                    this.content = content;
+                }
+            }
             //打开后自动隐藏掉，默认时间是300ms
             this.autoFade = autoFade ? (typeof autoFade === "number" ? autoFade : 1600) : false;
             //modal container对象
@@ -26,6 +36,8 @@
             this.footer = footer;
             //modal宽度
             this.width = width;
+            //可以给一个className，以便可以更改某些样式（增加权重）
+            this.className = className;
             //初始化
             this.init();
         }
@@ -52,7 +64,8 @@
             let {
                 header,
                 footer,
-                width
+                width,
+                className
             } = this;
             let mHeader = `
                 <div class="xui-modal-header ${header?.draggable ? 'xui-modal-drag' : ''}">
@@ -82,7 +95,7 @@
                 </div>
             `;
             let template = `
-                <div class="xui-modal-container">
+                <div class="xui-modal-container ${className ? className : ''}">
                     ${this.mask ? '<div class="xui-modal-mask"></div>' : ''}
                     <div class="xui-modal-box">
                         <div class="xui-modal-wrap">

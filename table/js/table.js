@@ -415,7 +415,7 @@
             paginationBox.className = 'pagination-container';
             this.mountEl.appendChild(paginationBox);
             //初始化pagination
-            this.paginationObj = window.pagination.render({
+            this.paginationObj = window.uiPagination.render({
                 mountEl: '.pagination-container',
                 count: dataList.length || 0,
                 groups: 5,
@@ -612,28 +612,15 @@
         //通过url获取数据
         _getData = ({
             url,
-            para,
-            contentType
+            para={},
+            contentType,
+            beforeSend,
+            type="POST",
         }) => {
             console.log(para, 'para')
             if (!url) throw Error('the url is required');
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
-
-                //处理请求数据时传入的参数
-                let formData = null;
-                if (contentType) {
-                    formData = JSON.stringify(para);
-                    xhr.setRequestHeader('Content-Type', contentType);
-                } else {
-                    formData = new FormData();
-                    for (let [key, value] of Object.entries(para)) {
-                        if (value) {
-                            formData.append(key, value);
-                        }
-                    }
-                }
-
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
                         if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
@@ -644,8 +631,47 @@
                         }
                     }
                 }
-                xhr.open("POST", url, true);
-                xhr.send(formData);
+                //拼接参数
+                function formatParams(data){
+                    var arr=[];
+                    for(var name in data){
+                        arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
+                    }
+                    // arr.push(("v="+Math.random()).replace(".",""));
+                    return arr.join("&");
+                }
+                if(type.toUpperCase() === 'POST'){
+                    xhr.open("POST", url, true);
+
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+                    //处理请求数据时传入的参数
+                    let formData = null;
+                    if (contentType) {
+                        formData = JSON.stringify(para);
+                        xhr.setRequestHeader('Content-Type', contentType);
+                    } else {
+                        formData = new FormData();
+                        for (let [key, value] of Object.entries(para)) {
+                            if (value) {
+                                formData.append(key, value);
+                            }
+                        }
+                    }
+    
+                    xhr.send(formData);
+                }else{
+                    if(type.includes('get')){
+                        type = 'GET';
+                    }
+                    xhr.open(type, Object.keys(para) > 0 ? (url+'?'+formatParams(para)) : url, true);
+
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+    
+                    xhr.send(null);
+                }
+
             });
 
 
@@ -1140,5 +1166,5 @@
     table.render = function (obj) {
         return new Table(obj);
     }
-    window.table = table;
+    window.uiTable = table;
 }(window);

@@ -293,6 +293,6 @@
         return new Pagination(obj);
     }
 
-    window.pagination = pagination;
+    window.uiPagination = pagination;
 
 }(window)

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn">request</button>
+    <script src="jquery-1.10.1.min.js"></script>
+    <script>
+        //通过url获取数据
+        _getData = ({
+            url,
+            para,
+            contentType,
+            beforeSend,
+            type="POST",
+        }) => {
+            console.log(para, 'para')
+            if (!url) throw Error('the url is required');
+            return new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                            var response = typeof xhr.response === 'string' ? JSON.parse(xhr.response) : xhr.response;
+                            resolve(response);
+                        } else {
+                            reject(xhr.response);
+                        }
+                    }
+                }
+
+                function formatParams(data){
+                    var arr=[];
+                    for(var name in data){
+                        arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
+                    }
+                    return arr.join("&");
+            
+                }
+                if(type.toUpperCase() === 'POST'){
+                    xhr.open("POST", url, true);
+
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+                    //处理请求数据时传入的参数
+                    let formData = null;
+                    if (contentType) {
+                        formData = JSON.stringify(para);
+                        xhr.setRequestHeader('Content-Type', contentType);
+                    } else {
+                        formData = new FormData();
+                        for (let [key, value] of Object.entries(para)) {
+                            if (value) {
+                                formData.append(key, value);
+                            }
+                        }
+                    }
+    
+                    xhr.send(formData);
+                }else{
+                    xhr.open(type, url+'?'+formatParams(para), true);
+
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+    
+                    xhr.send(null);
+                }
+
+            });
+
+
+        }
+
+        document.getElementById('btn').onclick = function () {
+            console.log('123');
+            // $.ajax({
+            //     url: 'http://124.204.78.18:48080/v1/camera/setSnapType',
+            //     type: "PUT",
+            //     contentType: "application/json",
+            //     dataType: "json",
+            //     data: {
+            //     	CameraIDs:[59106213],
+            //     	SnapType:1,
+            //     },
+            //     beforeSend:function(xhr){
+            //     	xhr.setRequestHeader('Secret', '16OUl41DihQVZDHBJCIAAg==');
+            //     	xhr.setRequestHeader('Appid','Rnfa1bbEIq3tjeHq');
+            //     },
+            //     success: function (msg) {
+            //         callback(msg);
+            //     },
+            //     error: function (xhr, textstatus, thrown) {
+
+            //     }
+            // });
+            // return;
+            _getData({
+                url: 'http://124.204.78.18:48080/v1/camera/setSnapType',
+                type:'PUT',
+                para: {
+                	CameraIDs:[59106213],
+                	SnapType:1,
+                },
+                contentType: 'application/json',
+                beforeSend:function(xhr){
+                	xhr.setRequestHeader('Secret', '16OUl41DihQVZDHBJCIAAg==');
+                	xhr.setRequestHeader('Appid','Rnfa1bbEIq3tjeHq');
+                },
+            })
+        }
+
+
+    </script>
+</body>
+
+</html>

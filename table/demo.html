@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/table.css">
     <script src="../loading/js/loading.js"></script>
     <script src="../pagenation/js/pagenation.js"></script>
-    <script src="js/ui-table.js"></script>
+    <script src="js/table.js"></script>
     <style>
         body {
             padding: 30px;
@@ -217,6 +217,7 @@
             dataSource: {
                 data:data,
                 url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
+                //这里还可传contentType,beforeSend等关于ajax的参数
                 //初始传入的参数,没有则可以不写para字段和参数
                 para: {
                     orgcode: 51000000000000000000,
@@ -265,6 +266,7 @@
                 size:'middle'
             },
         });
+        
         //调用更新table数据，包括可以更新链接，就是之前传入dataSource中的值
         document.getElementById('btn-update').onclick = function () {
             tableObj.update({

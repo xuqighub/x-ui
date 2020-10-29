@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/modal.css">
-    <script src="js/modal.js"></script>
+    <!-- <link rel="stylesheet" href="css/modal.css">
+    <script src="js/modal.js"></script> -->
+    <script src="../ui.bundle.js"></script>
     <style>
         .box {
             width: 500px;
@@ -135,24 +136,25 @@
     </script> -->
     
     <script>
-        //普通元素,仅弹出目标物
-        let modal = new Modal({
-            content: document.querySelector('.box1'),
+        //普通元素,仅弹出目标物,可以给一个className，以便可以更改某些样式（增加权重）
+        let modal0 = modal.render({
+            content: '.box1',
+            className:'demo0'
         });
 
         //写入string 格式，并自动隐藏
-        let modal2 = new Modal({
+        let modal2 = modal.render({
             content: 'auto fade',
             autoFade: 800
         });
 
         //不带mask层
-        let modal3 = new Modal({
+        let modal3 = modal.render({
             content: document.querySelector('.box2'),
             mask: false
         });
         //带有header，可以设置是否拖拽，后面的静态方法中没有header不能拖拽
-        let modal4 = new Modal({
+        let modal4 = modal.render({
             content: document.querySelector('.box3'),
             header: {
                 title: 'Modal Title',
@@ -167,7 +169,7 @@
         //带有footer，如果传入一个数组，按钮值是数组中的值，如果传入字符串则是渲染字符串，
         //如果传入一个对象则根据对象来配置，并切实是默认按钮（一个取消，一个确定）
         //width给modal一个宽度，不写以内容来撑开
-        let modal5 = new Modal({
+        let modal5 = modal.render({
             content: document.querySelector('.box4'),
             width: 600,
             // footer:'<button>123</button><button>156156</button>'
@@ -187,20 +189,20 @@
             },
         });
 
-        let modal6 = new Modal({
+        let modal6 = modal.render({
             content: 'now this is a message for you',
         });
         //点击modal添加的事件
-        modal.click(function (ev) {
+        modal0.click(function (ev) {
             console.log(ev.target);
         })
         //显示modal
         document.querySelector('.btn-open').onclick = function () {
-            modal.show();
+            modal0.show();
         }
         //隐藏modal
         document.querySelector('.btn-close1').onclick = function () {
-            modal.hide();
+            modal0.hide();
         }
         //隐藏modal
         document.querySelector('.btn-close2').onclick = function () {
