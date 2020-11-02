@@ -12,9 +12,10 @@
     <script src="jquery-1.10.1.min.js"></script>
     <script>
         //通过url获取数据
+        //通过url获取数据
         _getData = ({
             url,
-            para,
+            para={},
             contentType,
             beforeSend,
             type="POST",
@@ -33,17 +34,28 @@
                         }
                     }
                 }
-
+                //拼接参数
                 function formatParams(data){
                     var arr=[];
                     for(var name in data){
                         arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
                     }
+                    // arr.push(("v="+Math.random()).replace(".",""));
                     return arr.join("&");
-            
                 }
-                if(type.toUpperCase() === 'POST'){
-                    xhr.open("POST", url, true);
+                if(type.toUpperCase() === 'GET' || type.toUpperCase() === 'DELETE'){
+                    xhr.open(type, Object.keys(para).length > 0 ? (url+'?'+formatParams(para)) : url, true);
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+                    if (contentType) {
+                        xhr.setRequestHeader('Content-Type', contentType);
+                    }
+                    xhr.send(null);
+                }else{
+                    if(type.includes('post')){
+                        type = 'POST';
+                    }
+                    xhr.open(type, url, true);
 
                     //这里可以在发送请求之前设置请求头
                     beforeSend && beforeSend(xhr);
@@ -62,50 +74,18 @@
                     }
     
                     xhr.send(formData);
-                }else{
-                    xhr.open(type, url+'?'+formatParams(para), true);
-
-                    //这里可以在发送请求之前设置请求头
-                    beforeSend && beforeSend(xhr);
-    
-                    xhr.send(null);
                 }
 
             });
-
-
         }
-
         document.getElementById('btn').onclick = function () {
             console.log('123');
-            // $.ajax({
-            //     url: 'http://124.204.78.18:48080/v1/camera/setSnapType',
-            //     type: "PUT",
-            //     contentType: "application/json",
-            //     dataType: "json",
-            //     data: {
-            //     	CameraIDs:[59106213],
-            //     	SnapType:1,
-            //     },
-            //     beforeSend:function(xhr){
-            //     	xhr.setRequestHeader('Secret', '16OUl41DihQVZDHBJCIAAg==');
-            //     	xhr.setRequestHeader('Appid','Rnfa1bbEIq3tjeHq');
-            //     },
-            //     success: function (msg) {
-            //         callback(msg);
-            //     },
-            //     error: function (xhr, textstatus, thrown) {
-
-            //     }
-            // });
-            // return;
             _getData({
-                url: 'http://124.204.78.18:48080/v1/camera/setSnapType',
-                type:'PUT',
-                para: {
-                	CameraIDs:[59106213],
-                	SnapType:1,
-                },
+                url: 'http://124.204.78.18:48080/v1/camera',
+            		type:'DELETE',
+            		para: {
+            			CameraIDs:80516437
+                    },
                 contentType: 'application/json',
                 beforeSend:function(xhr){
                 	xhr.setRequestHeader('Secret', '16OUl41DihQVZDHBJCIAAg==');

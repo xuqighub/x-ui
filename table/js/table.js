@@ -15,7 +15,7 @@
             fillRows = false,
         }) {
             //给para一个默认值
-            dataSource.para = {},
+            dataSource.para  = dataSource.para ? dataSource.para : {},
             //挂载的目标元素
             this.mountEl = document.querySelector(mountEl);
             //数据字段格式
@@ -640,8 +640,18 @@
                     // arr.push(("v="+Math.random()).replace(".",""));
                     return arr.join("&");
                 }
-                if(type.toUpperCase() === 'POST'){
-                    xhr.open("POST", url, true);
+                if(type.toUpperCase() === 'GET'){
+                    xhr.open(type, Object.keys(para) > 0 ? (url+'?'+formatParams(para)) : url, true);
+
+                    //这里可以在发送请求之前设置请求头
+                    beforeSend && beforeSend(xhr);
+    
+                    xhr.send(null);
+                }else{
+                    if(type.includes('post')){
+                        type = 'POST';
+                    }
+                    xhr.open(type, url, true);
 
                     //这里可以在发送请求之前设置请求头
                     beforeSend && beforeSend(xhr);
@@ -660,21 +670,9 @@
                     }
     
                     xhr.send(formData);
-                }else{
-                    if(type.includes('get')){
-                        type = 'GET';
-                    }
-                    xhr.open(type, Object.keys(para) > 0 ? (url+'?'+formatParams(para)) : url, true);
-
-                    //这里可以在发送请求之前设置请求头
-                    beforeSend && beforeSend(xhr);
-    
-                    xhr.send(null);
                 }
 
             });
-
-
         }
         //对数据进行排序
         _sortData = (dataList,sortType,field)=>{
@@ -892,8 +890,25 @@
 
             //可编辑行
             (function editTableCell(){
+                //过滤标签正则
+                var re = /<[^<>]+>/g;
+                let editEl = null;
+                let editCellTarget = null;
+                let fieldText = '';
+                //事件绑定在mountEl上
                 _this.mountEl.addEventListener('click',function(ev){
                     let target = ev.target;
+                    let targetI = ev.target;
+                    //找到当前行的index
+                    let index = 0;
+                    while(targetI && targetI !== this){
+                        if(targetI.nodeName.toUpperCase() === 'TR'){
+                            index = targetI.dataset.index;
+                            break;
+                        }
+                        targetI = targetI.parentNode;
+                    }
+                    //找到当前编辑的单元格cell
                     while(target !== this && target){
                         if(target?.classList?.contains('ui-table-cell-edit-value')){
                             break;
@@ -902,17 +917,23 @@
                     }
                     //是否是可编辑单元格
                     if(target?.classList?.contains('ui-table-cell-edit-value')){
+                    	editCellTarget = target;
                         let td = target.parentNode;
                         let field = target.dataset.field;
+                        //根据field找到对应的columnItem
+                        let columnItem = columns.find(item=>item.dataIndex===field);
                         //根据field找到对应的columnItem的edit值
-                        let columnItemEdit = columns.find(item=>item.dataIndex===field).edit;
+                        let columnItemEdit = columnItem.edit;
                         let temp = document.createElement('div');
-                        let editEl = null;
+                        //给当前要插入编辑元素的td下的div添加ui-table-cell-editing类，表示正在编辑
+                      	target.classList.add('ui-table-cell-editing');
                         //单元格的原始值
                         let fieldValue = td.dataset.value;
+                        //当前单元格的原始text,有render进行转变的要进行转变值
+                        fieldText = typeof columnItem.render === 'function' ? columnItem.render(fieldValue).replace(re, '') : fieldValue;
                         //如果是自定义的编辑框
-                        if(columnItemEdit.editEl){
-                            temp.innerHTML = columnItemEdit.editEl;
+                        if(typeof columnItemEdit.editEl === 'function'){
+                            temp.innerHTML = columnItemEdit.editEl(fieldValue);
                             editEl = temp.firstElementChild;
                             editEl.classList.add('ui-table-editel');
                         }else{
@@ -920,6 +941,7 @@
                             temp.innerHTML = `<input class="ui-table-edit-input ui-table-editel" />`;
                             editEl = temp.firstElementChild;
                         }
+
                         //先清空div里面的值，然后再加入编辑元素
                         target.innerHTML= '';
                         target.appendChild(editEl);
@@ -934,45 +956,80 @@
                         //点击esc或者enter时变回原来的值和调用回调函数（调教数据）
                         //根据返回值确定是否成功
                         document.onkeydown = function(ev){
-                            //数据提交成功或失败后调用的回调函数，告诉这个cell是用新值还是旧值
-                            function resCallback(result){
-                                if(result){
-                                    //编辑成功了写入正确的值
-                                    //不成功则不更新表格
-                                    target.removeChild(editEl);
-                                    if(editEl.classList.contains('ui-table-edit-input')){
-                                        target.textContent = editEl.value;
+                            if(!editEl){
+                                //当editEl已经不存在时，不再触发事件
+                                return false;
+                            }
+                            //数据提交成功或失败后调用的回调函数，告诉这个cell是用新值还是旧值,
+                            //第二个参数，如果有，则把dataset更新为这个value，更多时候用于除了input和select之外的自定义样式
+                            function resCallback(result,value){
+                            	value += '';
+                                if(result || result === '' || result === 0){
+                                    if(typeof result !== 'boolean'){
+                                    	//如果传回的result不是boolean值，文本框的值则是要写入目标框的值
+                                    	target.textContent = result;
+                                    	//自定义的el,比如多个复选框,更新dataset
+                                    	value && (td.dataset.value = value);
                                     }else{
-                                        let index = editEl.selectedIndex;
-                                        target.textContent = editEl.options[index].text;
+                                    	//编辑成功了写入正确的值
+	                                    target.removeChild(editEl);
+	                                    if(editEl.classList.contains('ui-table-edit-input')){
+	                                    	//如果是input,文本框和dataset都要改变
+	                                        target.textContent = editEl.value;
+	                                        td.dataset.value = value ? value : editEl.value;
+	                                    }else if(editEl.nodeName.toUpperCase()==='SELECT'){
+                                    		//如果是select，文本框和dataset都要改变
+	                                    	let index = editEl.selectedIndex;
+	                                        target.textContent = editEl.options[index].text;
+	                                        td.dataset.value = value ? value : editEl.value;
+	                                    }else{
+	                                    	//自定义的el,比如多个复选框,更新dataset
+	                                    	value && (td.dataset.value = value);
+	                                    }
                                     }
                                 }else{
                                     //不成功则不更新表格
                                     target.removeChild(editEl);
-                                    target.textContent = fieldValue;
+                                    target.textContent = fieldText;
                                 }
+                                //移除编辑元素的正在编辑类
+                                target.classList.remove('ui-table-cell-editing');
                             }
                             if(ev.keyCode === 27){
-                                let textNode = document.createTextNode(fieldValue);
+                                let textNode = document.createTextNode(fieldText);
                                 target.appendChild(textNode);
                                 target.removeChild(editEl);
                             }else if(ev.keyCode === 13){
-                                //调用该cell编辑的回调函数，传入新值和回调函数
-                                columnItemEdit.callback && columnItemEdit.callback(editEl.value,resCallback);
+                                //调用该cell编辑的回调函数，传入1.新值和2.当前数据行对象和3.回调函数,4.html结构的el对象
+                                columnItemEdit.callback && columnItemEdit.callback(editEl.value,_this.getDataObj(index),resCallback,editEl);
                             }
                         }
                         //失去焦点的时候变回原来的值
-                        editEl.onblur = function(){
+                       /*  editEl.onblur = function(){
                             //这里加延迟是因为esc或者enter后触发onblur，移除editel需要时间，不加延时会parenNode会判断为存在
                             setTimeout(_=>{
-                                if(editEl.parentNode){
+                                if(editEl?.parentNode){
                                     target.removeChild(editEl);
-                                    target.innerHTML = fieldValue;
+                                    target.innerHTML = fieldText;
                                 }
                             })
-                        }
+                        } */
                     }
+
+                    
                 })
+                //点击页面其他地方的时候进行删除掉editEl
+                /* document.addEventListener('click',function(ev){
+                	//如果存在editEl,点击其他地方，需要将editEl删除
+                    if(editEl && !ev.target?.classList?.contains('ui-table-cell-edit-value')){
+                        editEl.remove();
+                        editEl = null;
+                        console.log(editCellTarget);
+                        editCellTarget.innerHTML = fieldText;
+                        //移除编辑元素的正在编辑类
+                        editCellTarget.classList.remove('ui-table-cell-editing');
+                    }
+                }) */
             })();
 
             //checkbox选中取消

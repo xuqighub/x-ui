@@ -128,14 +128,16 @@
                 //可编辑数据单元格，有editEl则为 select（需要手动设置select结构） 否则为input
                 edit:{
                     
-                    editEl:`<select>
+                    editEl:function(val){
+                        return `<select>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
-                        </select>`,
-                    //第一个参数是编辑后的输入的值，第二个参数是一个回调函数，
+                        </select>`
+                    },
+                    //第一个参数是编辑后的输入的值，第二个参数是当前数据行对象，第三个参数是一个回调函数，第四个参数是传入的html结构的el
                     //调用回调函数往里面传入一个boolean值，true值保留输入的新值，否则变回之前的值
-                    callback:function(val,resCallback){
+                    callback:function(val,dataObj,resCallback,el){
                         setTimeout(_=>{
                             resCallback(true);
                         })
@@ -180,12 +182,16 @@
                 sort:true,
                 edit:{
                     
-                    editEl:`<select>
+                    editEl: function(val){
+                        return `<select>
                             <option value="1">1</option>
                             <option value="40">2</option>
                             <option value="3">3</option>
-                        </select>`,
-                    callback:function(val){
+                        </select>`
+                    },
+                    //下面这个callback是当键盘按下enter确认时调用的
+                    //第一个参数是编辑后的输入的值，第二个参数是当前数据行对象，第三个参数是一个回调函数，第四个参数是传入的html结构的el
+                    callback:function(val,dataObje,callback,el){
                         return true;
                     }
                 },
@@ -211,7 +217,7 @@
                 address: `London, Park Lane no. ${i}`,
             });
         }
-        var tableObj = table.render({
+        var tableObj = uiTable.render({
             mountEl: '.box',
             columns: columns2,
             dataSource: {
