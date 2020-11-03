@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../pagenation/self-ui-icons/iconfont.css">
     <link rel="stylesheet" href="../loading/css/loading.css" />
     <link rel="stylesheet" href="../pagenation/css/pagenation.css">
     <link rel="stylesheet" href="css/table.css">
@@ -42,7 +41,8 @@
     <button id="btn-showloading">showloading</button>
     <button id="btn-hideloading">hideloading</button>
     <script>
-        const columns2 = [{
+        const columns2 = [
+            {
                 rowSelect: 'checkbox',
                 width: 60,
             },
@@ -72,32 +72,32 @@
                 dataIndex: 'address',
                 width: 120
             },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 180
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 180
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 180,
+            // {
+            //     title: 'Address',
+            //     dataIndex: 'address',
+            //     width: 180
+            // },
+            // {
+            //     title: 'Address',
+            //     dataIndex: 'address',
+            //     width: 180
+            // },
+            // {
+            //     title: 'Address',
+            //     dataIndex: 'address',
+            //     width: 180,
 
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 180
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 180
-            }
+            // },
+            // {
+            //     title: 'Address',
+            //     dataIndex: 'address',
+            //     width: 180
+            // },
+            // {
+            //     title: 'Address',
+            //     dataIndex: 'address',
+            //     width: 180
+            // }
         ];
         const columns = [
             {
@@ -227,7 +227,6 @@
                 //初始传入的参数,没有则可以不写para字段和参数
                 para: {
                     orgcode: 51000000000000000000,
-                    
                 },
                 parseData: function (res) {
                     //将返回结果经过处理之后返回一个数据对象,例如{data:[...],code:'200',count:200}，

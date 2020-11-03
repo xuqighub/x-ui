@@ -17,7 +17,7 @@
             //给para一个默认值
             dataSource.para  = dataSource.para ? dataSource.para : {},
             //挂载的目标元素
-            this.mountEl = document.querySelector(mountEl);
+            this.mountEl = typeof mountEl === 'object' ? mountEl : document.querySelector(mountEl);;
             //数据字段格式
             this.columns = columns;
 
@@ -275,7 +275,7 @@
                     //在td里面呈现的内容
                     let renderContent = column.rowSelect 
                     ? checkedStatus(column,item) 
-                    : (typeof column.render === 'function' ? column.render(item[column.dataIndex], item) : item[column.dataIndex]);
+                    : (typeof column.render === 'function' ? column.render(item[column.dataIndex], item) : (item[column.dataIndex] ? item[column.dataIndex] : ''));
                     //当为可编辑单元格时，需要增加一层div
                     renderContent = column.edit ? `<div data-field=${column.dataIndex} class="ui-table-cell-edit-value">${renderContent}</div>` : renderContent;
                     //过滤掉标签，title显示的内容
@@ -416,7 +416,7 @@
             this.mountEl.appendChild(paginationBox);
             //初始化pagination
             this.paginationObj = window.uiPagination.render({
-                mountEl: '.pagination-container',
+                mountEl: paginationBox,
                 count: dataList.length || 0,
                 groups: 5,
                 curPage: 1,
@@ -637,17 +637,18 @@
                     for(var name in data){
                         arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
                     }
-                    // arr.push(("v="+Math.random()).replace(".",""));
                     return arr.join("&");
                 }
-                if(type.toUpperCase() === 'GET'){
-                    xhr.open(type, Object.keys(para) > 0 ? (url+'?'+formatParams(para)) : url, true);
-
+                if(type.toUpperCase() === 'GET' || type.toUpperCase() === 'DELETE'){
+                    xhr.open(type, Object.keys(para).length > 0 ? (url+'?'+formatParams(para)) : url, true);
                     //这里可以在发送请求之前设置请求头
                     beforeSend && beforeSend(xhr);
-    
+                    if (contentType) {
+                        xhr.setRequestHeader('Content-Type', contentType);
+                    }
                     xhr.send(null);
                 }else{
+                    // post , put
                     if(type.includes('post')){
                         type = 'POST';
                     }
@@ -1005,7 +1006,7 @@
                             }
                         }
                         //失去焦点的时候变回原来的值
-                       /*  editEl.onblur = function(){
+                       editEl.onblur = function(){
                             //这里加延迟是因为esc或者enter后触发onblur，移除editel需要时间，不加延时会parenNode会判断为存在
                             setTimeout(_=>{
                                 if(editEl?.parentNode){
@@ -1013,13 +1014,13 @@
                                     target.innerHTML = fieldText;
                                 }
                             })
-                        } */
+                        }
                     }
 
                     
                 })
                 //点击页面其他地方的时候进行删除掉editEl
-                /* document.addEventListener('click',function(ev){
+                document.addEventListener('click',function(ev){
                 	//如果存在editEl,点击其他地方，需要将editEl删除
                     if(editEl && !ev.target?.classList?.contains('ui-table-cell-edit-value')){
                         editEl.remove();
@@ -1029,7 +1030,7 @@
                         //移除编辑元素的正在编辑类
                         editCellTarget.classList.remove('ui-table-cell-editing');
                     }
-                }) */
+                })
             })();
 
             //checkbox选中取消

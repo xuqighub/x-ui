@@ -18,7 +18,7 @@
         //数据总数
         this.count = count|0;
         //挂载的el
-        this.mountedEl = document.querySelector(mountEl);
+        this.mountedEl = typeof mountEl === 'object' ? mountEl : document.querySelector(mountEl);;
         if(!this.mountedEl){
             throw new Error('could not found the mountedEl');
         }
