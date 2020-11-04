@@ -28,7 +28,7 @@
         .dynamic{
             position:absolute;
             z-index:10;
-            top:18px;
+            top:0;
             left:0;
             background-color:rgba(100,100,100,0.8);
             border-radius:2px;
@@ -46,7 +46,6 @@
             margin:4px 14px;
             font-size: 14px;
         }
-
     </style>
 </head>
 
@@ -211,27 +210,27 @@
             },
             {
                 title: 'Address2',
-                dataIndex: 'address',
-                width: 120
+                dataIndex: 'address2',
+                width: 180
             },
             {
                 title: 'Address3',
-                dataIndex: 'address',
+                dataIndex: 'address3',
                 width: 180
             },
             {
                 title: 'Address4',
-                dataIndex: 'address',
+                dataIndex: 'address4',
                 width: 180
             },
             {
                 title: 'Address5',
-                dataIndex: 'address',
+                dataIndex: 'address5',
                 width: 180
             },
             {
                 title: 'Address6',
-                dataIndex: 'address',
+                dataIndex: 'address6',
                 width: 180
             }
         ];
@@ -350,7 +349,7 @@
                 name: `Edward King ${i}`,
                 age: Math.floor(Math.random()*3),
                 address: Math.pow(2,Math.round(Math.random()*5)),
-                address2: `London, address2 ${i}`,
+                address2: `ALondon, address2 ${i}`,
                 address3: `London, address3 ${i}`,
                 address4: `London, address4 ${i}`,
                 address5: `London, address5 ${i}`,
