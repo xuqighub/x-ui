@@ -25,6 +25,27 @@
             width: 1000px;
         }
 
+        .dynamic{
+            position:absolute;
+            z-index:10;
+            top:18px;
+            left:0;
+            background-color:rgba(100,100,100,0.8);
+            border-radius:2px;
+            height: auto !important;
+        }
+        .dynamic .anaRightGroup{
+            max-width:100%;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            color:#fff;
+            padding:12px 0;
+        }
+        .dynamic .anaRightGroup input{
+            margin:4px 14px;
+            font-size: 14px;
+        }
 
     </style>
 </head>
@@ -49,55 +70,170 @@
             {
                 title: '名字',
                 dataIndex: 'name',
-                width: 120,
+                width: 220,
                 sort:true,
+                //可编辑数据单元格,默认为input（不穿editEl参数的时候）可以传入select结构和其他自定义结构如多个checkbox
+                edit:{
+                    //第一个参数是编辑后的输入的值，第二个参数是当前数据行对象，第三个参数是一个回调函数，第四个参数是传入的html结构的el
+                    //调用回调函数往里面传入一个boolean值，true值保留输入的新值，否则变回之前的值
+                    callback:function(val,dataObj,resCallback,el){
+                        setTimeout(_=>{
+                            //数据提交成功或失败后调用的回调函数,第一个参数如果是布尔值（用于input和select结构），true：修改成功，用修改的值，
+                            //false,修改失败。也可以写入一个字符串数字（用于自定义结构），表示修改成功并用新的值写入之cell中。第二个参数可选，
+                            //表示dataObj该行该cell属性的值,把dataset更新为这个value，更多时候用于除了input和select之外的自定义样式（例如自定义时：resCallback('手机识别，人脸识别'),14)
+                            resCallback(true);
+                        })
+                    }
+                }
             },
             {
                 title: 'Age',
                 dataIndex: 'age',
                 width: 120,
                 sort:true,
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                width: 120,
-                ellipsis: true,
-                render: function () {
-                    return '<span>London No. 2 Lake ParkLondon No. 2 Lake Park</span>'
+                render:function(val,dataObj){
+                    switch(+val){
+                        case 0 : return '小';
+                        case 1 : return '中';
+                        case 2 : return '大';
+                    }
+                },
+                //可编辑数据单元格,默认为input（不穿editEl参数的时候）可以传入select结构和其他自定义结构如多个checkbox
+                edit:{
+                    editEl:function(val){
+                        return `<select>
+                            <option value="0">小</option>
+                            <option value="1">中</option>
+                            <option value="2">大</option>
+                        </select>`
+                    },
+                    //数据提交成功或失败后调用的回调函数,第一个参数如果是布尔值（用于input和select结构），true：修改成功，用修改的值，
+                    //false,修改失败。也可以写入一个字符串数字（用于自定义结构），表示修改成功并用新的值写入之cell中。第二个参数可选，
+                    //表示dataObj该行该cell属性的值和把dataset更新为这个value，更多时候用于除了input和select之外的自定义样式（例如自定义时：resCallback('手机识别，人脸识别'),14)
+                    callback:function(val,dataObj,resCallback,el){
+                        setTimeout(_=>{
+                            resCallback(true);
+                        })
+                    }
                 }
             },
             {
                 title: 'Address',
                 dataIndex: 'address',
+                width: 180,
+                render:function(val,dataObj){
+                    val = +val;
+                    var res = [];
+                    [2,4,8,16,32].forEach(item=>{
+                        switch(item & val){
+                            case 2:res.push('打斗识别');
+                                break;
+                            case 4:res.push('手机识别');
+                                break;
+                            case 8:res.push('人脸识别');
+                                break;
+                            case 16:res.push('车辆识别');
+                                break;
+                            case 32:res.push('步态识别');
+                            break;
+                        }
+                    })
+                    res = res.join(',')
+                    if(res === ''){
+                        res = '未配置';
+                    }
+                    return res;
+                },
+                //可编辑数据单元格,默认为input（不穿editEl参数的时候）可以传入select结构和其他自定义结构如多个checkbox
+                edit:{
+                    editEl:function(intelVal){
+                        return `<div class="form-group checkBoxSel dynamic">
+                                <div class="anaRightGroup">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input data-para="ddsb" data-text="打斗识别 " ${intelVal & 2 ? 'checked' : ''} value="2" type="checkbox">打斗识别 
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input data-para="sjsb" data-text="手机识别 " ${intelVal & 4 ? 'checked' : ''} value="4" type="checkbox">手机识别 
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input data-para="rlsb" data-text="人脸识别 " ${intelVal & 8 ? 'checked' : ''} value="8" type="checkbox">人脸识别 
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input data-para="clsb" data-text="车辆识别" ${intelVal & 16 ? 'checked' : ''} value="16" type="checkbox">车辆识别 
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input data-para="clsb" data-text="步态识别" ${intelVal & 32 ? 'checked' : ''} value="32" type="checkbox">步态识别 
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </div> 
+                            </div>`
+                    },
+                    callback:function(val,dataObj,resCallback,editEl){
+                        let checkedEl = editEl.querySelectorAll('input[type=checkbox]:checked');
+                        let intelligent = Array.from(checkedEl).reduce((prev,cur)=>prev |= cur.value,0);
+                        //如果是只能分析权限
+                		var res = [];
+                		[2,4,8,16,32].forEach(item=>{
+                			switch(item & intelligent){
+                                case 2:res.push('打斗识别');
+                                    break;
+                                case 4:res.push('手机识别');
+                                    break;
+                                case 8:res.push('人脸识别');
+                                    break;
+                                case 16:res.push('车辆识别');
+                                    break;
+                                case 32:res.push('步态识别');
+                                break;
+                			}
+                		})
+                		res = res.join(',')
+                		//数据提交成功或失败后调用的回调函数,第一个参数如果是布尔值（用于input和select结构），true：修改成功，用修改的值，
+                        //false,修改失败。也可以写入一个字符串数字（用于自定义结构），表示修改成功并用新的值写入之cell中。第二个参数可选，
+                        //表示dataObj该行该cell属性的值,把dataset更新为这个value，更多时候用于除了input和select之外的自定义样式（例如自定义时：resCallback('手机识别，人脸识别'),14)
+                    	resCallback(res,intelligent);
+                    }
+                }
+            },
+            {
+                title: 'Address2',
+                dataIndex: 'address',
                 width: 120
             },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: 180
-            // },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: 180
-            // },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: 180,
-
-            // },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: 180
-            // },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: 180
-            // }
+            {
+                title: 'Address3',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address4',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address5',
+                dataIndex: 'address',
+                width: 180
+            },
+            {
+                title: 'Address6',
+                dataIndex: 'address',
+                width: 180
+            }
         ];
         const columns = [
             {
@@ -124,10 +260,9 @@
             {
                 title: 'deviceloginname',
                 dataIndex: 'deviceloginname',
-                width: 120,
+                width: 220,
                 //可编辑数据单元格，有editEl则为 select（需要手动设置select结构） 否则为input
                 edit:{
-                    
                     editEl:function(val){
                         return `<select>
                             <option value="1">1</option>
@@ -213,8 +348,13 @@
             data.push({
                 key: i,
                 name: `Edward King ${i}`,
-                age: Math.round(Math.random()*100),
-                address: `London, Park Lane no. ${i}`,
+                age: Math.floor(Math.random()*3),
+                address: Math.pow(2,Math.round(Math.random()*5)),
+                address2: `London, address2 ${i}`,
+                address3: `London, address3 ${i}`,
+                address4: `London, address4 ${i}`,
+                address5: `London, address5 ${i}`,
+                address6: `London, address6 ${i}`,
             });
         }
         var tableObj = uiTable.render({
