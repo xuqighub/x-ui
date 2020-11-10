@@ -69,6 +69,9 @@
             //表格布局方式
             let tableLayout = hasFixedColumn || scrollX ? 'fixed' : 'auto';
 
+            //如果有scrollY则使用两个table的方式，gcolgroup都用计算后的，否则用一个table的分配方式
+            let colGroup = scrollY ?  this._createColgroup()[0] :  this._createColgroup()[1];
+
             /*下面生成ui-table-header中加了17 是因为头部的table由于没有垂直滚动条多的一个向右滚动的箭头（17px)，
              **会导致滚动的时候body部分的scrollLeft比上面多17px,(上面head的scrollLeft已经最大值)，所以需要在width中加上大于17px就行
              */
@@ -81,12 +84,12 @@
                                 `
                                 <div class="ui-table-header">
                                     <table class="ui-table" style = "${ (scrollX ? ('width:' + (parseInt(scrollX)+17) + 'px;') : '') }"> 
-                                        ${ this._createColgroup()[0] + this.createThead() } 
+                                        ${ colGroup + this.createThead() } 
                                     </table>
                                 </div>
                                 <div class="ui-table-body" style = "${ scrollY ? ('height:'+ scrollY + ';') : ''}" >
                                     <table class="ui-table" style = "min-width:100%; ${ (scrollX ? ('width:' + scrollX + ';') : '') }"> 
-                                        ${ this._createColgroup()[1] } 
+                                        ${ colGroup } 
                                         <tbody class="ui-table-tbody"><tr></tr></tbody>
                                     </table>
                                 </div>
@@ -94,7 +97,7 @@
                             )
                             :
                             (`<table class="ui-table" style = "min-width:100%; ${ (scrollX ? ('width:' + scrollX + ';') : '') } table-layout:${tableLayout}">
-                                    ${this._createColgroup()[1] + this.createThead()}
+                                    ${colGroup + this.createThead()}
                                 <tbody class="ui-table-tbody"><tr></tr></tbody>
                             </table>`)
                         }
@@ -1169,8 +1172,8 @@
                 }
             } = this;
             scrollX = parseInt(scrollX);
-            //如果没有给出scrollX则不计算,没有scrollY也不计算
-            if (!scrollX || !scrollY) {
+            //如果没有给出scrollY不计算
+            if (!scrollY) {
                 return false;
             }
             //计算给出的column总的width大小
@@ -1183,9 +1186,9 @@
                 //对width进行累加
                 colTotalWidth += columns[i].width;
             }
-            //如果给出的宽度 小于等于计算的宽度则不计算
-            if (scrollX <= colTotalWidth) {
-                return false;
+            //如果给出的宽度小于col 宽度的和，或者scrollX不存在则scrollX=mountEl的宽度，-20是为了减去滚动条宽度
+            if (scrollX <= colTotalWidth || !scrollX) {
+                scrollX = this.mountEl.offsetWidth - 20;
             }
 
             //分配生成colgroup
@@ -1194,7 +1197,8 @@
                 let width = Math.round(item.width * ratio);
                 return `<col style="width:${width}px;min-width:${width}px" />`;
             }).join('');
-        return `<colgroup>${cols} ${hasScrollbar ? '<col style="width:17px;min-width:17px;" />' : ''}</colgroup>`;
+
+            return `<colgroup>${cols} ${hasScrollbar ? '<col style="width:17px;min-width:17px;" />' : ''}</colgroup>`;
         }
 
         //通过dataIndex 获取数据对象

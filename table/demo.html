@@ -356,6 +356,7 @@
                 address6: `London, address6 ${i}`,
             });
         }
+        //如果出现表头和表体字段对不齐的情况，则要么有个column不写width，要么scroll中的x值要大于column 宽度的总和
         var tableObj = uiTable.render({
             mountEl: '.box',
             columns: columns2,
@@ -388,6 +389,7 @@
             //x,y可加单位也可不加，不加的时候默认单位为 px
             scroll: {
                 y: 620,
+                x:300
             },
             //不传rowSelect就默认是checkbox
             rowSelect: {
