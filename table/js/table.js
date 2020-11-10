@@ -1188,7 +1188,12 @@
             }
             //如果给出的宽度小于col 宽度的和，或者scrollX不存在则scrollX=mountEl的宽度，-20是为了减去滚动条宽度
             if (scrollX <= colTotalWidth || !scrollX) {
-                scrollX = this.mountEl.offsetWidth - 20;
+                //如果column的总和比table宽度小，则用table宽度,否则用column总和
+                if(colTotalWidth <= this.mountEl.offsetWidth){
+                    scrollX = this.mountEl.offsetWidth - 20;
+                }else{
+                    scrollX = colTotalWidth;
+                }
             }
 
             //分配生成colgroup

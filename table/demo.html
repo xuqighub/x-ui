@@ -383,10 +383,9 @@
                 //     sort:'sort2'
                 // }
             },
-            //如果设定了x总宽度，table-layout将变为fixed,这时候如果某个column列没有设置宽度，那么它将分享表格剩余宽度,
+            //如果如果x小于column列的总和，或者不存在，则根据column的width来决定，这时候如果某个column列没有设置宽度，那么它将分享表格剩余宽度,
             //如果x总宽度大于每个column加起来总宽度，并且所有column都有width,那么剩余的宽度将会自动按（列宽）比例分配到每个column
-            //如果既没有x总宽度，又没有fixed属性，table-layout为 auto，这时将根据内容来确定表格列宽度，column的width将失效
-            //x,y可加单位也可不加，不加的时候默认单位为 px
+            //x,y可加单位也可不加，不加的时候默认单位为 px，x可以没有
             scroll: {
                 y: 620,
                 x:300
