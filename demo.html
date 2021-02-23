@@ -12,7 +12,6 @@
     <script src="jquery-1.10.1.min.js"></script>
     <script>
         //通过url获取数据
-        //通过url获取数据
         _getData = ({
             url,
             para={},
@@ -36,6 +35,10 @@
                 }
                 //拼接参数
                 function formatParams(data){
+                    if(typeof data === 'string'){
+                        //如果传入的是个字符串就直接发送
+                        return data;
+                    }
                     var arr=[];
                     for(var name in data){
                         arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
@@ -65,10 +68,15 @@
                         formData = JSON.stringify(para);
                         xhr.setRequestHeader('Content-Type', contentType);
                     } else {
-                        formData = new FormData();
-                        for (let [key, value] of Object.entries(para)) {
-                            if (value) {
-                                formData.append(key, value);
+                        if(typeof para === 'string'){
+                            //如果传入的是个字符串就直接发送
+                            formData = para;
+                        }else{
+                            formData = new FormData();
+                            for (let [key, value] of Object.entries(para)) {
+                                if (value) {
+                                    formData.append(key, value);
+                                }
                             }
                         }
                     }

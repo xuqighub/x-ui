@@ -637,6 +637,10 @@
                 }
                 //拼接参数
                 function formatParams(data){
+                    if(typeof data === 'string'){
+                        //如果传入的是个字符串就直接发送
+                        return data;
+                    }
                     var arr=[];
                     for(var name in data){
                         arr.push(encodeURIComponent(name)+"="+encodeURIComponent(data[name]));
@@ -666,10 +670,15 @@
                         formData = JSON.stringify(para);
                         xhr.setRequestHeader('Content-Type', contentType);
                     } else {
-                        formData = new FormData();
-                        for (let [key, value] of Object.entries(para)) {
-                            if (value) {
-                                formData.append(key, value);
+                        if(typeof para === 'string'){
+                            //如果传入的是个字符串就直接发送
+                            formData = para;
+                        }else{
+                            formData = new FormData();
+                            for (let [key, value] of Object.entries(para)) {
+                                if (value) {
+                                    formData.append(key, value);
+                                }
                             }
                         }
                     }
@@ -976,6 +985,9 @@
                         //根据返回值确定是否成功
                         document.onkeydown = function(ev){
                             if(!editEl){
+
+                                //删除keydown事件
+                                document.onkeydown = null;
                                 //当editEl已经不存在时，不再触发事件
                                 return false;
                             }
@@ -1029,9 +1041,14 @@
                                 editCellTarget.removeChild(editEl);
                                 //移除编辑元素的正在编辑类
                                 editCellTarget.classList.remove('ui-table-cell-editing');
+
+                                //删除keydown事件
+                                document.onkeydown = null;
                             }else if(ev.keyCode === 13){
                                 //调用该cell编辑的回调函数，传入1.新值和2.当前数据行对象和3.回调函数,4.html结构的el对象
                                 columnItemEdit.callback && columnItemEdit.callback(editEl.value,_this.getDataObj(index),resCallback,editEl);
+                                //删除keydown事件
+                                document.onkeydown = null;
                             }
                         }
                         //失去焦点的时候变回原来的值
@@ -1047,6 +1064,9 @@
                                     //移除编辑元素的正在编辑类
                                     editCellTarget.classList.remove('ui-table-cell-editing');
                                     editEl = null;
+
+                                    //删除keydown事件
+                                    document.onkeydown = null;
                                 }
                             })
                         }

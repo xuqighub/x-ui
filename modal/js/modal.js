@@ -8,10 +8,10 @@
             mask = true,
             header,
             width,
+            style,
             footer,
             className,
         }) {
-
             //填充内容,可以使elemet对象，也可以是字符串格式
             if(typeof content === 'object'){
                 this.content = content;
@@ -36,6 +36,8 @@
             this.footer = footer;
             //modal宽度
             this.width = width;
+            //合并style ,设置初始top
+            this.style = {top:100,...style};
             //可以给一个className，以便可以更改某些样式（增加权重）
             this.className = className;
             //初始化
@@ -44,10 +46,11 @@
         //初始化
         init = () => {
             let container = this.containerEl();
-            if (typeof this.content === 'object') {
-                //如果是传入的html元素
-                this.content.style.display = 'block';
+            if (typeof this.content === 'object') { //如果是传入的html元素
+                //如果没有设置width，以内部content的width为this.width
+                !this.width && (this.width = parseInt(getComputedStyle(this.content).width) || 0);
                 container.querySelector('.xui-modal-body').appendChild(this.content);
+                this.content.style.display = 'block';
             } else if (this.content) {
                 //如果传入的string元素
                 container.querySelector('.xui-modal-body').innerHTML = this.content;
@@ -65,6 +68,7 @@
                 header,
                 footer,
                 width,
+                style,
                 className
             } = this;
             let mHeader = `
@@ -99,8 +103,8 @@
                     ${this.mask ? '<div class="xui-modal-mask"></div>' : ''}
                     <div class="xui-modal-box">
                         <div class="xui-modal-wrap">
-                            <div class="xui-modal-content-box">
-                                <div class="xui-modal-content" style="width:${width ? width + 'px;' : 'auto;'}">
+                            <div class="xui-modal-content-box" style="width:${width ? width + 'px;' : 'auto;'} margin-left:${style.left ? style.left + 'px;' : 'auto;'} margin-top:${style.top ==='center' ? 'auto;' : style.top + 'px'}">
+                                <div class="xui-modal-content">
                                     ${header ? mHeader : ''}
                                     <div class="xui-modal-body"></div>
                                     ${footer ? mFooter : ''}
@@ -197,12 +201,26 @@
         }
         //动画显示弹出层
         show = () => {
+            if(event){
+                let {style,container,width} = this;
+                let content = container.querySelector('.xui-modal-content-box');
+                let triggerRect = event.target.getBoundingClientRect();
+                //触发元素的中心点
+                let triggerCenterX = triggerRect.left + triggerRect.width/2;
+                let triggerCenterY = triggerRect.top + triggerRect.height/2;
+                //modal的左上角
+                let modalX = !isNaN(style.left) ? style.left : (window.innerWidth/2 - width/2);
+                let modalY = !isNaN(style.top) ? style.top : (window.innerHeight/2-100);
+                let orgX = triggerCenterX - modalX + 'px';
+                let orgY = triggerCenterY - modalY + 'px';
+                content.style.transformOrigin = orgX + ' ' + orgY;
+            }
             //先将元素display:block
             this.container.classList.add('ui-modal-show');
             //为mask添加动画进入
             this.mask && this.container.querySelector('.xui-modal-mask').classList.add('fadeIn');
             //为主体内容添加动画进入
-            this.container.querySelector('.xui-modal-content').classList.add('zoomIn');
+            this.container.querySelector('.xui-modal-content-box').classList.add('zoomIn');
     
             //如果是自动隐藏
             if (this.autoFade) {
@@ -216,12 +234,12 @@
             //为mask添加动画弹出
             this.mask && this.container.querySelector('.xui-modal-mask').classList.add('fadeOut');
             //为主体内容添加动画弹出
-            this.container.querySelector('.xui-modal-content').classList.add('zoomOut');
+            this.container.querySelector('.xui-modal-content-box').classList.add('zoomOut');
         }
     }
     
     Modal.containerEl = (config) => {
-        let {title,content,type,okText,cancelText,loading,noFooter,width} = config;
+        let {title,content,type,okText,cancelText,loading,noFooter,width,style} = config;
         //不同的信息应该是不同的icon 
         let icon = function(type){
             switch(type){
@@ -242,7 +260,7 @@
                 <div class="xui-modal-mask"></div>
                 <div class="xui-modal-box">
                     <div class="xui-modal-wrap">
-                        <div class="xui-modal-content xui-modal-${type}" style="width:${width ? width+'px' : '416px;'}">
+                        <div class="xui-modal-content xui-modal-${type}" style="width:${width+'px;'} margin-left:${style.left ? style.left + 'px;' : 'auto;'} margin-top:${style.top ==='center' ? 'auto;' : style.top + 'px'}">
                             <div class="xui-modal-body">
                                 <div class="xui-modal-body-title">
                                     <span class="xui-modal-title-icon">
@@ -337,7 +355,8 @@
     Modal.confirm = function({
         title,
         content,
-        width,
+        width = 416,
+        style,
         okText = "确认",
         cancelText = "取消",
         autoFade,
@@ -347,19 +366,14 @@
         onCancel,
         onOk
     }){
-        //生成结构插入页面底部
-        let container = Modal.containerEl({title,content,type:'confirm',okText,cancelText,loading,width});
-        document.querySelector('body').appendChild(container);
-        //初始化事件
-        Modal.initEvent({container,mask,layerClose,autoFade,onOk,onCancel,loading})
-        //显示confirm框
-        Modal.show({container,autoFade,mask});
+        modalPub({title,content,type:'confirm',okText,cancelText,loading,width,style,autoFade,mask,layerClose,onCancel,onOk});
     }
     //info
     Modal.info = function({
         title,
         content,
-        width,
+        width = 416,
+        style,
         okText = "我知道了",
         autoFade,
         loading,
@@ -367,19 +381,21 @@
         layerClose = false,
         onOk
     }){
-        //生成结构插入页面底部
-        let container = Modal.containerEl({title,content,type:'info',okText,loading,width});
-        document.querySelector('body').appendChild(container);
-        //初始化事件
-        Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
-        //显示模态框
-        Modal.show({container,autoFade,mask});
+        // //生成结构插入页面底部
+        // let container = Modal.containerEl({title,content,type:'info',okText,loading,width});
+        // document.querySelector('body').appendChild(container);
+        // //初始化事件
+        // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
+        // //显示模态框
+        // Modal.show({container,autoFade,mask});
+        modalPub({title,content,type:'info',okText,loading,width,style,autoFade,mask,layerClose,onOk});
     }
     //warning
     Modal.warning = function({
         title,
         content,
-        width,
+        width = 416,
+        style,
         okText = "我知道了",
         autoFade,
         loading,
@@ -387,19 +403,21 @@
         layerClose = false,
         onOk
     }){
-        //生成结构插入页面底部
-        let container = Modal.containerEl({title,content,type:'warning',okText,loading,width});
-        document.querySelector('body').appendChild(container);
-        //初始化事件
-        Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
-        //显示模态框
-        Modal.show({container,autoFade,mask});
+        // //生成结构插入页面底部
+        // let container = Modal.containerEl({title,content,type:'warning',okText,loading,width});
+        // document.querySelector('body').appendChild(container);
+        // //初始化事件
+        // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
+        // //显示模态框
+        // Modal.show({container,autoFade,mask});
+        modalPub({title,content,type:'warning',okText,loading,width,style,autoFade,mask,layerClose,onOk});
     }
     //error
     Modal.error = function({
         title,
         content,
-        width,
+        width = 416,
+        style,
         okText = "我知道了",
         autoFade,
         loading,
@@ -407,19 +425,21 @@
         layerClose = false,
         onOk
     }){
-        //生成结构插入页面底部
-        let container = Modal.containerEl({title,content,type:'error',okText,loading,width});
-        document.querySelector('body').appendChild(container);
-        //初始化事件
-        Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
-        //显示模态框
-        Modal.show({container,autoFade,mask});
+        // //生成结构插入页面底部
+        // let container = Modal.containerEl({title,content,type:'error',okText,loading,width});
+        // document.querySelector('body').appendChild(container);
+        // //初始化事件
+        // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
+        // //显示模态框
+        // Modal.show({container,autoFade,mask});
+        modalPub({title,content,type:'error',okText,loading,width,style,autoFade,mask,layerClose,onOk});
     }
     //success
     Modal.success = function({
         title,
         content,
-        width,
+        width = 416,
+        style,
         okText = "我知道了",
         autoFade,
         loading,
@@ -428,12 +448,38 @@
         onOk,
         noFooter,
     }){
+        // //生成结构插入页面底部
+        // let container = Modal.containerEl({title,content,type:'success',okText,loading,noFooter,width});
+        // document.querySelector('body').appendChild(container);
+        // //初始化事件
+        // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
+        // //显示模态框
+        // Modal.show({container,autoFade,mask});
+        modalPub({title,content,type:'success',okText,loading,width,style,autoFade,mask,layerClose,onOk,noFooter});
+    }
+    //模态框静态方法的公共方法
+    function modalPub({title,content,type,okText,cancelText,loading,width,style,autoFade,mask,layerClose,onCancel,onOk,noFooter}){
+        //合并style ,设置初始top
+        style = {top:100,...style};
         //生成结构插入页面底部
-        let container = Modal.containerEl({title,content,type:'success',okText,loading,noFooter,width});
+        let container = Modal.containerEl({title,content,type,okText,cancelText,loading,width,style,noFooter});
         document.querySelector('body').appendChild(container);
         //初始化事件
-        Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
-        //显示模态框
+        Modal.initEvent({container,mask,layerClose,autoFade,onOk,onCancel,loading});
+        if(event){
+            let content = container.querySelector('.xui-modal-content');
+            let triggerRect = event.target.getBoundingClientRect();
+            //触发元素的中心点
+            let triggerCenterX = triggerRect.left + triggerRect.width/2;
+            let triggerCenterY = triggerRect.top + triggerRect.height/2;
+            //modal的左上角
+            let modalX = !isNaN(style.left) ? style.left : (window.innerWidth/2 - width/2);
+            let modalY = !isNaN(style.top) ? style.top : (window.innerHeight/2-100);
+            let orgX = triggerCenterX - modalX + 'px';
+            let orgY = triggerCenterY - modalY + 'px';
+            content.style.transformOrigin = orgX + ' ' + orgY;
+        }
+        //显示confirm框
         Modal.show({container,autoFade,mask});
     }
     var modal = {};

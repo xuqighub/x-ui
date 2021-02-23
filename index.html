@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="btn-confirm">confirm</button>
+    <script src="ui.bundle.js"></script>
+    <script>
+    document.querySelector('.btn-confirm').onclick = function () {
+            Modal.confirm({
+                title: 'this is a confirm',
+                content: 'now msg mmmmm meg msg',
+                width: 416,
+                layerClose: true,
+                loading: true,
+                onCancel: function () {
+                    console.log(666);
+                },
+                onOk: function (hide) {
+                    setTimeout(function () {
+                        hide();
+                    }, 1000)
+                }
+            });
+        }
+    </script>
+</body>
+</html>

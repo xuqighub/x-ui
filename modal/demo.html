@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <!-- <link rel="stylesheet" href="css/modal.css">
-    <script src="js/modal.js"></script> -->
-    <script src="../ui.bundle.js"></script>
+    <link rel="stylesheet" href="css/modal.css">
+    <script src="js/modal.js"></script>
+    <!-- <script src="../ui.bundle.js"></script> -->
     <style>
         .box {
             width: 500px;
@@ -18,10 +18,14 @@
             margin: 0 auto;
 
         }
+        .box2{
+            border:1px solid #c00;
+        }
     </style>
 </head>
 
 <body>
+    <div class="mm"></div>
     <div class="box box1">
         <button class="btn-close1">close</button>
     </div>
@@ -139,18 +143,20 @@
         //普通元素,仅弹出目标物,可以给一个className，以便可以更改某些样式（增加权重）
         let modal0 = modal.render({
             content: '.box1',
-            className:'demo0'
+            className:'demo0',
+            style:{left:10}
         });
 
-        //写入string 格式，并自动隐藏
+        //写入string 格式，并自动隐藏,当content为string时，不能从按钮处弹出到目标位置
         let modal2 = modal.render({
             content: 'auto fade',
-            autoFade: 800
+            autoFade: 1000
         });
 
         //不带mask层
         let modal3 = modal.render({
             content: document.querySelector('.box2'),
+            style:{top:0},
             mask: false
         });
         //带有header，可以设置是否拖拽，后面的静态方法中没有header不能拖拽
@@ -224,16 +230,20 @@
         document.querySelector('.btn-withFooter').onclick = function () {
             modal5.show();
         }
-        //带有footer的modal,一般参数和普通modal一致
-        //loading 表示是否是异步处理，点击确认后出现loading状态
-        //onOk表示点击确认后的回调函数，参数也是一个回调函数，当调用这个参数中的回调函数时，会关闭确认框，
-        //一般用于异步结束关闭确认框，如果没有onOk参数，那么同onCancel一致，直接关闭确认框
-        //width可以设置宽度，不写该属性默认为416px
+        /***
+        *1.带有footer的modal,一般参数和普通modal一致
+        *2.loading 表示是否是异步处理，点击确认后出现loading状态
+        *3.onOk表示点击确认后的回调函数，参数也是一个回调函数，当调用这个参数中的回调函数时，会关闭确认框，
+        *4.一般用于异步结束关闭确认框，如果没有onOk参数，那么同onCancel一致，直接关闭确认框
+        *5.width可以设置宽度，不写该属性默认为416px,
+        *6.style是一个对象，里面可以设置modal显示的位置，top默认100px，left默认居中显示，如果需要top也居中可传入:{top:'center'}，也可以只设置其中一个值如:{left:200}
+        ***/
         document.querySelector('.btn-confirm').onclick = function () {
             Modal.confirm({
                 title: 'this is a confirm',
                 content: 'now msg mmmmm meg msg',
                 width: 416,
+                style:{top:'center'},
                 layerClose: true,
                 loading: true,
                 onCancel: function () {

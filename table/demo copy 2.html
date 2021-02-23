@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../loading/css/loading.css" />
+    <link rel="stylesheet" href="../pagenation/css/pagenation.css">
+    <link rel="stylesheet" href="css/table.css">
+    <script src="../loading/js/loading.js"></script>
+    <script src="../pagenation/js/pagenation.js"></script>
+    <script src="js/table.js"></script>
+    <style>
+        body {
+            padding: 30px;
+            padding-top: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        }
+
+        .box {
+            width: 100%;
+            border: 1px solid #c00;
+            position: relative;
+            width: 1600px;
+        }
+
+        .dynamic{
+            position:absolute;
+            z-index:10;
+            top:0;
+            left:0;
+            background-color:rgba(100,100,100,0.8);
+            border-radius:2px;
+            height: auto !important;
+        }
+        .dynamic .anaRightGroup{
+            max-width:100%;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            color:#fff;
+            padding:12px 0;
+        }
+        .dynamic .anaRightGroup input{
+            margin:4px 14px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" style="display: block;">
+    </div>
+
+    <script>
+       
+        const columns = [
+            {
+                title: 'devicecode',
+                dataIndex: 'devicecode',
+                width: 190,
+            },
+            {
+                title: 'deviceloginname',
+                dataIndex: 'deviceloginname',
+                width: 220,
+            },
+            {
+                title: 'deviceloginpass',
+                dataIndex: 'deviceloginpass',
+                width: 190,
+            },
+            {
+                title: 'devicename',
+                dataIndex: 'devicename',
+                width: 140
+            },
+            {
+                title: 'deviceresourename',
+                dataIndex: 'deviceresourename',
+                width: 180
+            },
+            {
+                title: 'devicetype',
+                dataIndex: 'devicetype',
+                width: 180
+            },
+            {
+                title: 'idstr',
+                dataIndex: 'idstr',
+                width: 180,
+                sort:true,
+            },
+            {
+                title: 'ipaddress',
+                dataIndex: 'ipaddress',
+                width: 180
+            },
+            {
+                title: 'createtime',
+                dataIndex: 'createtime',
+                // width: 180,
+                // fixed:'right'
+            }
+        ];
+      
+        var tableObj = uiTable.render({
+            mountEl: '.box',
+            columns: columns,
+            dataSource: {
+                url: 'http://localhost:90/iisms/deviceInfo!getPage.action',
+                //这里还可传contentType,beforeSend等关于ajax的参数
+                //初始传入的参数,没有则可以不写para字段和参数
+                para: {
+                    orgcode: 51000000000000000000,
+                },
+                parseData: function (res) {
+                    //将返回结果经过处理之后返回一个数据对象,例如{data:[...],code:'200',count:200}，
+                    //还可在这里对数据结果进行拦击，比如成功或失败的话就弹出失败提示
+                    return {
+                        data: res.data.list,
+                        count: res.dataCounts
+                    };
+                },
+            },
+            //如果设定了x总宽度，table-layout将变为fixed,这时候如果某个column列没有设置宽度，那么它将分享表格剩余宽度,
+            //如果x总宽度大于每个column加起来总宽度，并且所有column都有width,那么剩余的宽度将会自动按（列宽）比例分配到每个column
+            //如果既没有x总宽度，又没有fixed属性，table-layout为 auto，这时将根据内容来确定表格列宽度，column的width将失效
+            //x,y可加单位也可不加，不加的时候默认单位为 px
+            scroll: {
+                y: 520,
+                // x:2000
+            },
+            //不传rowSelect就默认是checkbox
+            rowSelect: {
+                type: 'checkbox'
+            },
+            pagination: {
+                layout: ['count', 'prev', 'page', 'next', 'limits','refresh'],
+                pageSize:10,
+                groups:3,
+            },
+            loading:{
+                size:'middle'
+            },
+        });
+        
+
+    </script>
+</body>
+
+</html>
