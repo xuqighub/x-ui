@@ -26,7 +26,7 @@
 <script src="js/pagenation.js"></script>
 
     <script>
-    var pagination = pagination.render({
+    var pagination = uiPagination.render({
         mountEl:'#box',
         count:180,
         groups:5,
@@ -34,6 +34,9 @@
         prev:'上一页',
         layout:['count','prev','page','next','limits','refresh','skip'],
         next:'下一页',
+        //first:'首页',
+        //last:'尾页',
+        //limits:[5,10,15],可定制显示的页数下拉框
         callback:function(obj){
             //pagination上的事件操作后的回调函数，比如获取数据
             //obj包含当前分页的所有参数，比如obj.curPage,obj.pagiSize
@@ -42,7 +45,7 @@
     });
 
     document.getElementById('btn').onclick = function(){
-        pagination.update({curPage:20,count:300});
+        pagination.update({curPage:0,count:0});
     }
 
     </script>

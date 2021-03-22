@@ -13,6 +13,7 @@
             },
             loading,
             fillRows = false,
+            initRender = true,
         }) {
             //给para一个默认值
             dataSource.para  = dataSource.para ? dataSource.para : {},
@@ -34,6 +35,8 @@
             this.hasScrollbar = false;
             //排序对象，包括排序字段和排序方式
             this.sort = {};
+            //首次init初始化table的时候是否需要渲染table，默认为true，为false时，init就不会渲染（多用于和Modal使用，一开始modal隐藏）
+            this.initRender = initRender;
 
             //这个字段就是看是否需要有下拉滚动条,包含x,y属性{x:1500,y:800}
             //有没有传入单位，没有传入单位默px为单位
@@ -384,6 +387,10 @@
                 let {
                     parseData
                 } = dataSource;
+                //是否首次渲染
+                if(!this.initRender){
+                    return;
+                }
                 //获取数据
                 _this._getData(dataSource)
                     .then(res => {
@@ -483,11 +490,10 @@
                             //更新表格数据
                             _this.updateTable(res.data);
                             //更新pagination的总条数
-                            if (res.count) {
-                                _this.paginationObj.update({
-                                    count: res.count,
-                                })
-                            }
+                            _this.paginationObj.update({
+                                count: res.count,
+                            })
+                            
                         });
                 }
             }
@@ -511,7 +517,8 @@
         /*这个更新是通过table对象更新数据，比如搜索数据之类的，不仅需要更新表格数据，还要将pagination的curpage设为第一页
          **传入的参数是dataSource,会在初始dataSource的基础上添加或者覆盖之前的数据，并且只是暂时的，不会干扰基础的dataSource
          **例如现在要多传入一个age:18,前调用table的时候传了一个name:leo那么只需要传入{para:{age:18}},url和parseDate可以
-         **传也可以不传，传了就会覆盖
+         **传也可以不传，传了就会覆盖,如果里面有rowSelec对象就会替换columns的第一条数据对象
+         **isInnerUpdate是内部调用，沿用之前的data,比如sort排序的时候调用
          */
         update = (updateDataSource={},isInnerUpdate) => {
             let {
@@ -519,20 +526,27 @@
                 dataSource
             } = this;
             let _this = this;
+            let {rowSelect,} = updateDataSource;
             //计算当前页是多少
-            let curPage = (isInnerUpdate && _this?.paginationObj?.getStatus()?.curPage) ?? 1;
+            let curPage = (_this?.paginationObj?.getStatus()?.curPage) ?? 1;
             //对datasource参数进行更新合并，不干扰初始的dataSource
+            let curPageField = pagination ?. para ?. curPage ?? 'curPage';
             dataSource = {
                 ...dataSource,
                 ...updateDataSource,
                 //isInnerUpdate是表示是否是内部调用这个方法，如果是，则沿用之前的data
-                data: updateDataSource.data || isInnerUpdate ? (updateDataSource?.data ?? dataSource.data) : null,
+                // data: updateDataSource.data || (isInnerUpdate ? (updateDataSource?.data ?? dataSource.data) : null),
+                data: updateDataSource?.data ?? dataSource.data,
                 para: {
                     ...dataSource.para,
                     ...updateDataSource.para,
                     //请求的curPage是否被其他字段替代掉, 内部调用则还是之前请求的页码
-                    [pagination ?. para ?. curPage ?? 'curPage']:curPage,
+                    [curPageField]:curPage,
                 },
+            }
+            //如果外面调用update传入参数有rowSelect替换columns里面的rowSelect，用于每次呈现不同的选中checkbox或者radio
+            if(rowSelect){
+                _this.columns.splice(0,1,rowSelect);
             }
             //直接给出的数据数组
             if (dataSource.data) {
@@ -574,7 +588,6 @@
                     parseData
                 } = dataSource;
                 if(this.sort.type){
-                    console.log(this.sort,'sss')
                     //如果存在这个字段的排序，则将排序字段放入请求数据的参数中
                     dataSource.para[dataSource ?. sort ?. order ?? 'order'] = this.sort.type;
                     dataSource.para[dataSource ?. sort ?. sort ?? 'sort'] = this.sort.field;
@@ -587,8 +600,10 @@
                 if(_this.loading){
                     _this.showLoading();
                 }
-                //请求数据更新表格数据
-                this._getData(dataSource)
+                //请求数据
+                function getDataByPara(){
+                    //请求数据更新表格数据
+                    _this._getData(dataSource)
                     .then(res => {
                         //显示loading层
                         if(_this.loading){
@@ -598,17 +613,25 @@
                         res = parseData ? parseData(res) : res;
                         //记录当前页的数据列表
                         _this.dataList = res.data;
+                        //如果当前页只剩一条数据并且删除了，更新的时候应该倒退一页作为当前页
+                        if(res.count === 0 && curPage > 1){
+                            curPage -= 1;
+                            dataSource.para[curPageField] = curPage;
+                            getDataByPara();
+                            return;
+                        }
                         //更新表格数据
                         _this.updateTable(res.data);
                         //更新pagination的总条数,如果是内部调用（排序）则不更新当前页码，回调函数里的dataSource必须变化（加了参数）
-                        if (res.count && pagination) {
+                        if (pagination) {
                             _this.paginationObj.update({
                                 count: res.count,
-                                //如果当前update方法是内部调用，则当前页不变
-                                curPage: isInnerUpdate ? '' : 1,
+                                curPage: curPage,
                             }, _this.paginationInitCallback(dataSource))
                         }
                     });
+                }
+                getDataByPara();
             }
 
         }
@@ -751,7 +774,9 @@
             }
             if (rowSelect.type === 'radio') {
                 //是否是表头，表头不需要呈现radio
-                return isHeader ? '' : `<label><input name="radio-group" class="ui-table-checkinput ui-table-radio" type="radio" /></label>`;
+                return isHeader 
+                ? '' 
+                : `<label ${disabled ? 'class="ui-table-disabled"':''}><input ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} name="radio-group" class="ui-table-checkinput ui-table-radio ${disabled ? 'ui-table-disabled':''}" type="radio" /></label>`;
             }
             //默认返回的是checkbox
             if (rowSelect.type === 'checkbox') {

@@ -53,9 +53,19 @@
     <div class="box" style="display: block;">
     </div>
 
+    <button id="btn-update1">update rowSelect</button>
+    <button id="btn-update2">update para</button>
     <script>
        
         const columns = [
+            {
+                rowSelect: 'radio',
+                width: 60,
+                render:function(res,item){
+                    let arr = [15,40,36];
+                    return arr.includes(item.idstr);
+                }
+            },
             {
                 title: 'devicecode',
                 dataIndex: 'devicecode',
@@ -100,7 +110,7 @@
             {
                 title: 'createtime',
                 dataIndex: 'createtime',
-                // width: 180,
+                width: 180,
                 // fixed:'right'
             }
         ];
@@ -109,7 +119,7 @@
             mountEl: '.box',
             columns: columns,
             dataSource: {
-                url: 'http://localhost:90/iisms/deviceInfo!getPage.action',
+                url: 'http://localhost:8080/iisms/deviceInfo!getPage.action',
                 //这里还可传contentType,beforeSend等关于ajax的参数
                 //初始传入的参数,没有则可以不写para字段和参数
                 para: {
@@ -144,9 +154,28 @@
             loading:{
                 size:'middle'
             },
+            initRender:true
         });
         
-
+        //update的时候传入rowSelect以更改选中的行数据
+        document.querySelector('#btn-update1').onclick = function(){
+            tableObj.update({
+                rowSelect:{
+                    rowSelect:true,
+                    render:function(val,item){
+                        return [63,64].includes(item.idstr);
+                    }
+                }
+            });
+        }
+        //修改para
+        document.querySelector('#btn-update2').onclick = function(){
+            tableObj.update({
+                para:{
+                    devicecode:'123'
+                }
+            });
+        }
     </script>
 </body>
 

@@ -198,7 +198,7 @@
     //更新count数据，比如删除了数据，count变化，分页会变化/
     //第二个参数callback是操作点击pagination之后的callback回调函数
     Pagination.prototype.update = function({count,curPage,pageSize,groups},callback){
-        this.count = count || this.count;
+        this.count = count === undefined ? this.count : count;
         this.curPage = curPage || this.curPage;
         // this.groups = groups || this.groups;
         //更新callback函数

@@ -236,6 +236,11 @@
             //为主体内容添加动画弹出
             this.container.querySelector('.xui-modal-content-box').classList.add('zoomOut');
         }
+        //取消confirm 按钮的loading 状态
+        cancelLoading = ()=>{
+            let {container} = this;
+            container.classList.remove('xui-modal-loading');
+        }
     }
     
     Modal.containerEl = (config) => {
@@ -364,9 +369,10 @@
         mask = true,
         layerClose = false,
         onCancel,
-        onOk
+        onOk,
+        noFooter
     }){
-        modalPub({title,content,type:'confirm',okText,cancelText,loading,width,style,autoFade,mask,layerClose,onCancel,onOk});
+        modalPub({title,content,type:'confirm',okText,cancelText,loading,width,style,autoFade,mask,layerClose,onCancel,onOk,noFooter});
     }
     //info
     Modal.info = function({
@@ -379,7 +385,8 @@
         loading,
         mask = true,
         layerClose = false,
-        onOk
+        onOk,
+        noFooter
     }){
         // //生成结构插入页面底部
         // let container = Modal.containerEl({title,content,type:'info',okText,loading,width});
@@ -388,7 +395,7 @@
         // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
         // //显示模态框
         // Modal.show({container,autoFade,mask});
-        modalPub({title,content,type:'info',okText,loading,width,style,autoFade,mask,layerClose,onOk});
+        modalPub({title,content,type:'info',okText,loading,width,style,autoFade,mask,layerClose,onOk,noFooter});
     }
     //warning
     Modal.warning = function({
@@ -401,7 +408,8 @@
         loading,
         mask = true,
         layerClose = false,
-        onOk
+        onOk,
+        noFooter
     }){
         // //生成结构插入页面底部
         // let container = Modal.containerEl({title,content,type:'warning',okText,loading,width});
@@ -410,7 +418,7 @@
         // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
         // //显示模态框
         // Modal.show({container,autoFade,mask});
-        modalPub({title,content,type:'warning',okText,loading,width,style,autoFade,mask,layerClose,onOk});
+        modalPub({title,content,type:'warning',okText,loading,width,style,autoFade,mask,layerClose,onOk,noFooter});
     }
     //error
     Modal.error = function({
@@ -423,7 +431,7 @@
         loading,
         mask = true,
         layerClose = false,
-        onOk
+        onOk,noFooter
     }){
         // //生成结构插入页面底部
         // let container = Modal.containerEl({title,content,type:'error',okText,loading,width});
@@ -432,7 +440,7 @@
         // Modal.initEvent({container,mask,layerClose,autoFade,onOk,loading})
         // //显示模态框
         // Modal.show({container,autoFade,mask});
-        modalPub({title,content,type:'error',okText,loading,width,style,autoFade,mask,layerClose,onOk});
+        modalPub({title,content,type:'error',okText,loading,width,style,autoFade,mask,layerClose,onOk,noFooter});
     }
     //success
     Modal.success = function({

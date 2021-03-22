@@ -54,17 +54,23 @@
 
     </div>
     <input />
-    <button id="btn-update">update</button>
-    <button id="btn-update2">update2</button>
-    <button id="btn-update3">update3</button>
+    <button id="btn-update">update url</button>
+    <button id="btn-update2">update2 offlineData</button>
+    <button id="btn-update3">update3 para</button>
+    <button id="btn-update4">update4 rowSelect</button>
     <button id="btn-check">get checked data</button>
     <button id="btn-showloading">showloading</button>
     <button id="btn-hideloading">hideloading</button>
     <script>
         const columns2 = [
             {
-                rowSelect: 'checkbox',
+                rowSelect: true,
                 width: 60,
+                render:function(res,item){
+                    if(item.key===5){
+                        return true;
+                    }
+                }
             },
             {
                 title: '名字',
@@ -236,7 +242,7 @@
         ];
         const columns = [
             {
-                rowSelect: 'checkbox',
+                rowSelect: true,
                 //当column里面不仅有rowSelect还有dataIndex时，表明数据中自带checkbox字段按数据的checked状态渲染
                 // dataIndex:'idstr',
                 width: 60,
@@ -362,7 +368,7 @@
             columns: columns2,
             dataSource: {
                 data:data,
-                url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
+                //url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
                 //这里还可传contentType,beforeSend等关于ajax的参数
                 //初始传入的参数,没有则可以不写para字段和参数
                 para: {
@@ -392,7 +398,7 @@
             },
             //不传rowSelect就默认是checkbox
             rowSelect: {
-                type: 'checkbox'
+                type: 'radio'
             },
             //table 表体部分数据没满的是否需要空行填满，好看一点
             // fillRows:{
@@ -416,7 +422,7 @@
         document.getElementById('btn-update').onclick = function () {
             tableObj.update({
                 //  data:data,
-                 url: 'http://localhost:80/iisms/deviceInfo!getPage.action',
+                 url: 'http://localhost:8080/iisms/deviceInfo!getPage.action',
                 //初始传入的参数
                 para: {
                     orgcode: 51000000000000000000,
@@ -445,6 +451,19 @@
                     orgcode: 51000000000000000000,
                     idstr:'20',
                     name:'lll'
+                }
+            });
+        }
+        //更新获取的参数，如查询筛选某个字段
+        document.getElementById('btn-update4').onclick = function () {
+            tableObj.update({
+                rowSelect:{
+                    rowSelect:true,
+                    render:function(val,item){
+                        if(item.key===6){
+                            return true;
+                        }
+                    }
                 }
             });
         }
