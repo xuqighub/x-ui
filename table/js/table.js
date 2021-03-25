@@ -601,7 +601,7 @@
                     _this.showLoading();
                 }
                 //请求数据
-                function getDataByPara(){
+                const getDataByPara = function(){
                     //请求数据更新表格数据
                     _this._getData(dataSource)
                     .then(res => {
